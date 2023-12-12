@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { Navbar } from "./_components/Navbar";
 import { Container } from "./_components/Container";
+import { Contacto } from "./_components/Contacto";
+import { Footer } from "./_components/Footer";
 
 export default async function Home() {
   return (
-    <main>
-      <header className="w-screen py-5 px-8">
+    <main className="bg-gradient-to-b from-pink-300 to-rose-400">
+      <header className="max-w-screen p-5 sticky top-0 z-50">
         <Navbar />
       </header>
-      <section className="w-screen p-5">
+      <section className="max-w-screen p-5">
         <Container>
           <div className="flex justify-center items-center h-screen">
             <div className="w-3/4">
@@ -29,6 +31,8 @@ export default async function Home() {
           </div>
         </Container>
       </section>
+      <Contacto />
+      <Footer />
     </main>
   );
 }
