@@ -1,12 +1,10 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
 import { SignedIn, UserButton, SignedOut, SignInButton } from "@clerk/nextjs";
 
 export function Navbar(){
     return (
-      <nav className="navbar glass rounded-md outline outline-1">
+      <nav className="navbar mx-auto py-5 rounded-md shadow-lg bg-gray-100 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-80">
         <div className="flex-1">
           <Link href="/" className="btn btn-ghost text-xl">Furgones Tia Priscilla</Link>
         </div>
@@ -17,7 +15,7 @@ export function Navbar(){
             </SignedIn>
             <SignedOut>
                 <SignInButton mode="modal">
-                    <button className="btn">Inicia Sesion</button>
+                    <button className="btn shadow-md">Inicia Sesion</button>
                 </SignInButton>
             </SignedOut>
           </ul>
