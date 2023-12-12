@@ -23,9 +23,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider localization={esES}> 
+    <ClerkProvider localization={esES}
+    appearance={{
+      elements:{
+        footer: 'hidden',
+      },
+    }}> 
     <html lang="en">
-      <body className={`font-sans ${inter.variable} bg-gradient-to-bl from-slate-50 to-fuchsia-100 min-h-screen`}>
+      <body className={`font-sans ${inter.variable}  min-h-screen`}>
         <TRPCReactProvider cookies={cookies().toString()}>
           {children}
         </TRPCReactProvider>
