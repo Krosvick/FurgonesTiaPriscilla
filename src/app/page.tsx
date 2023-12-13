@@ -8,7 +8,16 @@ export default async function Home() {
   return (
     <main className="bg-gradient-to-b from-pink-300 to-rose-400">
       <header className="max-w-screen p-5 sticky top-0 z-50">
-        <Navbar />
+        <Navbar 
+          title="Furgones Tia Priscilla"
+          elements={[
+            <Link href="/envios">Envio</Link>,
+            <Link href="/rastreo">Rastreo</Link>,
+            <Link href="/cotizacion">Cotizacion</Link>,
+          ]}
+          showAuthInfo={true}
+          className="rounded-md bg-gray-100"
+        />
       </header>
       <section className="max-w-screen p-5">
         <Container>
