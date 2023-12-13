@@ -6,11 +6,12 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-
 import { db } from "~/server/db";
+import { currentUser } from "@clerk/nextjs";
+
 
 /**
  * 1. CONTEXT
@@ -58,6 +59,39 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  * These are the pieces you use to build your tRPC API. You should import these a lot in the
  * "/src/server/api/routers" directory.
  */
+export const middleware = t.middleware
+
+const isAuth = middleware(async (opts) => {
+  try{
+    const user = await currentUser()
+    const isAdmin = (user?.publicMetadata.roles as string[])?.includes('admin')
+
+
+    if (!user?.id) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' })
+    }
+
+    return opts.next({
+      ctx: {
+        user,
+        isAdmin
+      }
+    })
+  } catch (error: any) {
+    throw new TRPCError({ code: error.message})
+  }
+})
+
+
+const isAdmin = middleware(async (opts) => {
+  // @ts-ignore
+  if (!opts.ctx.isAdmin) {
+    throw new TRPCError({ code: 'FORBIDDEN' })
+  };
+  return opts.next(opts)
+});
+
+
 
 /**
  * This is how you create new routers and sub-routers in your tRPC API.
@@ -73,4 +107,6 @@ export const createTRPCRouter = t.router;
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
+export const protectedProcedure = t.procedure.use(isAuth);
+export const adminProcedure = t.procedure.use(isAuth).use(isAdmin);
 export const publicProcedure = t.procedure;
