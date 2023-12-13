@@ -6,13 +6,15 @@ import { SignedIn, UserButton, SignedOut, SignInButton } from "@clerk/nextjs";
 interface NavbarProps {
   logo?: string;
   title: string;
-  elements: React.ReactNode[];
+  elements?: React.ReactNode[];
   showAuthInfo: boolean;
+  className?: string;
 }
 
-export function Navbar({ logo, title, elements, showAuthInfo }: NavbarProps){
+export function Navbar({ logo, title, elements = [], showAuthInfo, className }: NavbarProps){
     return (
-      <nav className="navbar mx-auto py-5 rounded-md shadow-lg bg-gray-100 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-80">
+      //add classname props to nav
+      <nav className={`navbar mx-auto py-5 shadow-lg bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-80 ${className}`}>
         <div className="flex-1">
           {logo && <Image src={logo} alt="Logo" />}
           <Link href="/" className="btn btn-ghost text-xl">{title}</Link>
@@ -20,7 +22,7 @@ export function Navbar({ logo, title, elements, showAuthInfo }: NavbarProps){
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost rounded-btn lg:hidden">Dropdown</div>
           <ul tabIndex={0} className="menu dropdown-content lg:menu-horizontal flex items-center px-1">
-            {elements.map((element, index) => (
+            {elements?.map((element, index) => (
               <li key={index}>{element}</li>
             ))}
             {showAuthInfo ? 
@@ -37,7 +39,7 @@ export function Navbar({ logo, title, elements, showAuthInfo }: NavbarProps){
         </div>
         <div className="hidden lg:flex">
           <ul className="menu menu-horizontal flex items-center px-1">
-            {elements.map((element, index) => (
+            {elements?.map((element, index) => (
               <li key={index}>{element}</li>
             ))}
             {showAuthInfo ? 
