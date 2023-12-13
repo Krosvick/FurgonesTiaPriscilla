@@ -1,12 +1,14 @@
-import { Drawer } from "../_components/Drawer";
+import { Container } from "../_components/Container";
 
 
 export default async function Admin(){
     return (
-        <main>
-            <Drawer>
-                <h1>Admin</h1>
-            </Drawer>
-        </main>
+        <section className="max-w-screen">
+            <Container>
+                <div className="w-[120vh] h-screen">
+                    hola
+                </div>
+            </Container>
+        </section>
     );
 }
