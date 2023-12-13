@@ -3,7 +3,7 @@ import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
   content: [
-    "./node_modules/flowbite-react/**/*.js",
+    "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
     "./src/**/*.tsx",
 ],
   theme: {
@@ -15,8 +15,8 @@ export default {
   },
   plugins: [
     require("daisyui"),
-    require("flowbite/plugin"),
     require('@tailwindcss/forms'),
+    require("flowbite/plugin"),
   ],
   daisyui: {
     themes : ['light']
