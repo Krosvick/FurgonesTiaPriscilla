@@ -10,9 +10,9 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { db } from "~/server/db";
-import { currentUser } from "@clerk/nextjs";
-
-
+import { decodeJwt, type Session } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs"
+import { type NextRequest } from "next/server";
 /**
  * 1. CONTEXT
  *
@@ -25,11 +25,42 @@ import { currentUser } from "@clerk/nextjs";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
+
+interface CreateContextOptions {
+  headers: Headers;
+  session: Session | null;
+}
+export const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
+    headers: opts.headers,
     db,
-    ...opts,
+    session: opts.session,
   };
+};
+export const createTRPCContext = async (opts: { req: NextRequest }) => {
+  const sessionToken = opts.req.cookies.get("__session")?.value ?? "";
+
+  try {
+    // Decode the JWT to get the session ID
+    const decodedJwt = decodeJwt(sessionToken);
+
+    // Verify the session with Clerk to get the session object
+    const verifiedSession = await clerkClient.sessions.getSession(decodedJwt.payload.sid)
+
+    // If the session is valid, return a context with the session
+    return createInnerTRPCContext({
+      headers: opts.req.headers,
+      session: verifiedSession,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  // If the session is invalid, return a context with no session
+  return createInnerTRPCContext({
+    headers: opts.req.headers,
+    session: null,
+  });
 };
 
 /**
@@ -61,35 +92,37 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  */
 export const middleware = t.middleware
 
-const isAuth = middleware(async (opts) => {
+const isAuth = middleware(async ({ ctx, next }) => {
   try{
-    const user = await currentUser()
-    const isAdmin = (user?.publicMetadata.roles as string[])?.includes('admin')
-
-
-    if (!user?.id) {
+    if(!ctx.session){
       throw new TRPCError({ code: 'UNAUTHORIZED' })
     }
-
-    return opts.next({
+    const user = await clerkClient.users.getUser(ctx.session.userId)
+    const isAdmin = (user?.publicMetadata.role as string)?.includes('admin')
+    return next({
       ctx: {
-        user,
-        isAdmin
+        session: ctx.session,
+        isAdmin: isAdmin
       }
     })
-  } catch (error: any) {
+  }catch (error: any) {
+    throw new TRPCError({ code: error.message})
+  }
+})
+
+const isAdmin = middleware(async ({ ctx, next }) => {
+  try{
+    // @ts-ignore
+    if(!ctx.isAdmin){
+      throw new TRPCError({ code: 'UNAUTHORIZED' })
+    }
+    return (await next({ ctx }))
+  }catch (error: any) {
     throw new TRPCError({ code: error.message})
   }
 })
 
 
-const isAdmin = middleware(async (opts) => {
-  // @ts-ignore
-  if (!opts.ctx.isAdmin) {
-    throw new TRPCError({ code: 'FORBIDDEN' })
-  };
-  return opts.next(opts)
-});
 
 
 
