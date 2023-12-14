@@ -10,3 +10,88 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model Apoderado {
+  idApoderado  String      @id @default(uuid())
+  nombre       String
+  apellido     String
+  rut         String   @unique
+  telefono     String
+  correo       String   @unique
+  direcciones    Direccion[]
+  pupilos      Pupilo[]
+  Contrato     Contrato[]
+  CreatedAt    DateTime  @default(now())
+  UpdatedAt    DateTime  @updatedAt
+  DeletedAt    DateTime? @default(now())
+}
+
+model Direccion {
+  idDireccion String @id @default(uuid())
+  calle String
+  numero String
+  comuna String
+  ciudad String
+  departamento String?
+  apoderado Apoderado @relation(fields: [idApoderado], references: [idApoderado])
+  idApoderado String
+  CreatedAt    DateTime  @default(now())
+  UpdatedAt    DateTime  @updatedAt
+  DeletedAt    DateTime? @default(now())
+
+  @@index([idApoderado], name: "idApoderado")
+}
+
+model Pupilo {
+  idPupilo String      @id @default(uuid())
+  nombre   String
+  apellido String
+  rut      String   @unique
+  apoderado Apoderado @relation(fields: [idApoderado], references: [idApoderado])
+  idApoderado String
+  colegio String
+  detalle ContratoDetallePupilo?
+  CreatedAt    DateTime  @default(now())
+  UpdatedAt    DateTime  @updatedAt
+  DeletedAt    DateTime? @default(now())
+
+  @@index([idApoderado], name: "idApoderado")
+}
+
+model Contrato {
+  idContrato String @id @default(uuid())
+  fechaInicio DateTime
+  fechaTermino DateTime
+  apoderado Apoderado @relation(fields: [idApoderado], references: [idApoderado])
+  idApoderado String
+  detalles ContratoDetallePupilo[]
+  CreatedAt    DateTime  @default(now())
+  UpdatedAt    DateTime  @updatedAt
+  DeletedAt    DateTime? @default(now())
+
+  @@index([idApoderado], name: "idApoderado")
+}
+
+enum TiposDeContrato {
+  ida
+  vuelta
+  idaYvuelta
+}
+
+model ContratoDetallePupilo {
+  idTipoDeContrato String @id @default(uuid())
+  nombre String
+  precio String
+  descripcion String?
+  tipo TiposDeContrato
+  contrato Contrato @relation(fields: [idContrato], references: [idContrato])
+  idContrato String
+  pupilo Pupilo @relation(fields: [idPupilo], references: [idPupilo])
+  idPupilo String @unique
+  CreatedAt    DateTime  @default(now())
+  UpdatedAt    DateTime  @updatedAt
+  DeletedAt    DateTime? @default(now())
+
+  @@index([idContrato], name: "idContrato")
+  @@index([idPupilo], name: "idPupilo")
+}
