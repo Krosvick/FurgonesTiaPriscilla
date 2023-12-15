@@ -9,10 +9,18 @@ import { apoderadoSchema } from "~/server/zodTypes/apoderadoTypes";
 type Apoderado = z.infer<typeof apoderadoSchema>;
 
 export function CreateApoderado() {
+    const { data: apoderadoData, isLoading } = api.apoderados.getLatest.useQuery();
     const router = useRouter();
 
     const { register, handleSubmit, formState: {errors} } = useForm<Apoderado>({
         resolver: zodResolver(apoderadoSchema),
+        defaultValues: isLoading ? {} : {
+            nombre: apoderadoData?.nombre,
+            apellido: apoderadoData?.apellido,
+            telefono: apoderadoData?.telefono,
+            correo: apoderadoData?.correo,
+            rut: apoderadoData?.rut,
+        }
     });
 
     const createApoderado = api.apoderados.create.useMutation({
@@ -24,6 +32,11 @@ export function CreateApoderado() {
     const onSubmit: SubmitHandler<Apoderado> = async (data) => {
         await createApoderado.mutateAsync(data);
     }
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
