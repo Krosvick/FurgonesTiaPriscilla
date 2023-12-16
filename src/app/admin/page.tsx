@@ -1,11 +1,13 @@
 import { Container } from "../_components/Container";
 import { api } from "~/trpc/server";
 import { CreateApoderado } from "../_components/apoderados/createApoderado";
+import { WebpayForm } from "../_components/webpay/webpayTest";
 
 
 
 export default async function Admin(){
     const apoderados = await api.apoderados.getAll.query();
+    //const response = await api.apoderados.webpayTest.query();
     const hola = await api.apoderados.nombre.query({text: "hola"});
     
     return (
@@ -22,6 +24,7 @@ export default async function Admin(){
                         </div>
                     ))}
                     <CreateApoderado />
+                    <WebpayForm />
                 </div>
             </Container>
         </section>
