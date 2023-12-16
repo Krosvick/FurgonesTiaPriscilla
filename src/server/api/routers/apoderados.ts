@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
+import { WebpayPlus } from "transbank-sdk";
 
 import { apoderadoSchema } from "~/server/zodTypes/apoderadoTypes";
 
@@ -36,6 +37,24 @@ export const ApoderadosRouter = createTRPCRouter({
 
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.db.apoderado.findMany();
+  }),
+
+  webpayTest: publicProcedure
+  .input(z.object({ returnURL: z.string() }))
+  .query(async ({ ctx, input }) => {
+    let buyOrder = "O-" + Math.floor(Math.random() * 10000) + 1;
+    let sessionId = "S-" + Math.floor(Math.random() * 10000) + 1;
+    let amount = Math.floor(Math.random() * 1000) + 1001;
+    let returnUrl = input.returnURL;
+    const createResponse = await (new WebpayPlus.Transaction()).create(
+      buyOrder, 
+      sessionId, 
+      amount, 
+      returnUrl
+    );
+    let token = createResponse.token;
+    let url = createResponse.url;
+    return { token, url, amount };
   }),
 });
 
