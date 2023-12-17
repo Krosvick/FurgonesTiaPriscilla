@@ -20,8 +20,8 @@ model Apoderados {
   telefono     String
   correo       String   @unique
   pupilos      Pupilos[]
-  contrato   Contratos  @relation(fields: [idContrato], references: [idContrato])
-  idContrato   String @unique
+  contrato   Contratos?  @relation(fields: [idContrato], references: [idContrato])
+  idContrato   String? @unique
   pagos        Pagos[]
   CreatedAt    DateTime  @default(now())
   UpdatedAt    DateTime  @updatedAt
