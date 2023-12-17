@@ -11,43 +11,43 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Apoderado {
+
+model Apoderados {
   idApoderado  String      @id @default(uuid())
   nombre       String
   apellido     String
   rut         String   @unique
   telefono     String
   correo       String   @unique
-  direcciones    Direccion[]
-  pupilos      Pupilo[]
-  Contrato     Contrato[]
+  pupilos      Pupilos[]
+  contrato   Contratos  @relation(fields: [idContrato], references: [idContrato])
+  idContrato   String @unique
+  pagos        Pagos[]
   CreatedAt    DateTime  @default(now())
   UpdatedAt    DateTime  @updatedAt
   DeletedAt    DateTime? @default(now())
 }
 
-model Direccion {
+model Direcciones {
   idDireccion String @id @default(uuid())
   calle String
   numero String
   comuna String
   ciudad String
   departamento String?
-  apoderado Apoderado @relation(fields: [idApoderado], references: [idApoderado])
-  idApoderado String
+  detalle ContratoDetallePupilo[]
   CreatedAt    DateTime  @default(now())
   UpdatedAt    DateTime  @updatedAt
   DeletedAt    DateTime? @default(now())
 
-  @@index([idApoderado], name: "idApoderado")
 }
 
-model Pupilo {
+model Pupilos {
   idPupilo String      @id @default(uuid())
   nombre   String
   apellido String
   rut      String   @unique
-  apoderado Apoderado @relation(fields: [idApoderado], references: [idApoderado])
+  apoderado Apoderados @relation(fields: [idApoderado], references: [idApoderado])
   idApoderado String
   colegio String
   detalle ContratoDetallePupilo?
@@ -58,18 +58,28 @@ model Pupilo {
   @@index([idApoderado], name: "idApoderado")
 }
 
-model Contrato {
-  idContrato String @id @default(uuid())
+enum EstadoPagoDetalle {
+  Pagado
+  Pendiente
+  Atrasado
+  Inactivo
+}
+model Pagos {
+  idPago String @id @default(uuid())
   fechaInicio DateTime
-  fechaTermino DateTime
-  apoderado Apoderado @relation(fields: [idApoderado], references: [idApoderado])
+  fechaTermino DateTime  
+  apoderado Apoderados @relation(fields: [idApoderado], references: [idApoderado])
   idApoderado String
-  detalles ContratoDetallePupilo[]
+  contrato Contratos @relation(fields: [idContrato], references: [idContrato])
+  idContrato String
+  estado EstadoPagoDetalle
+  monto Int
   CreatedAt    DateTime  @default(now())
   UpdatedAt    DateTime  @updatedAt
   DeletedAt    DateTime? @default(now())
 
   @@index([idApoderado], name: "idApoderado")
+  @@index([idContrato])
 }
 
 enum TiposDeContrato {
@@ -78,15 +88,31 @@ enum TiposDeContrato {
   idaYvuelta
 }
 
+model Contratos {
+  idContrato String @id @default(uuid())
+  nombre      String
+  descripcion String?
+  fechaInicio DateTime
+  fechaTermino DateTime
+  pagos        Pagos[]
+  idPago       String
+  detallesContrato ContratoDetallePupilo[]
+  Apoderado Apoderados?
+  CreatedAt    DateTime  @default(now())
+  UpdatedAt    DateTime  @updatedAt
+  DeletedAt    DateTime? @default(now())
+
+  @@index([idPago], name: "idPago")
+}
+
 model ContratoDetallePupilo {
   idTipoDeContrato String @id @default(uuid())
-  nombre String
   precio String
-  descripcion String?
+  direccion Direcciones[]
   tipo TiposDeContrato
-  contrato Contrato @relation(fields: [idContrato], references: [idContrato])
+  contrato Contratos @relation(fields: [idContrato], references: [idContrato])
   idContrato String
-  pupilo Pupilo @relation(fields: [idPupilo], references: [idPupilo])
+  pupilo Pupilos @relation(fields: [idPupilo], references: [idPupilo])
   idPupilo String @unique
   CreatedAt    DateTime  @default(now())
   UpdatedAt    DateTime  @updatedAt
