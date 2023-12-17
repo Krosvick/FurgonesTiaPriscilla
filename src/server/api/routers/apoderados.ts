@@ -18,7 +18,7 @@ export const ApoderadosRouter = createTRPCRouter({
   create: adminProcedure
     .input(apoderadoSchema)
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.apoderado.create({
+      return ctx.db.apoderados.create({
         data: {
           nombre: input.nombre,
           apellido: input.apellido,
@@ -30,13 +30,13 @@ export const ApoderadosRouter = createTRPCRouter({
     }),
 
   getLatest: publicProcedure.query(({ ctx }) => {
-    return ctx.db.apoderado.findFirst({
+    return ctx.db.apoderados.findFirst({
       orderBy: { CreatedAt: "desc" },
     });
   }),
 
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.db.apoderado.findMany();
+    return ctx.db.apoderados.findMany();
   }),
 
   webpayTest: publicProcedure
