@@ -90,7 +90,7 @@ enum TiposDeContrato {
 
 model Contratos {
   idContrato String @id @default(uuid())
-  nombre      String
+  nombre      String?
   descripcion String?
   fechaInicio DateTime
   fechaTermino DateTime
