@@ -1,9 +1,11 @@
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
+const {nextui} = require("@nextui-org/react");
+
 export default {
   content: [
-    "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
     "./src/**/*.tsx",
 ],
   theme: {
@@ -16,8 +18,9 @@ export default {
   plugins: [
     require("daisyui"),
     require('@tailwindcss/forms'),
-    require("flowbite/plugin"),
+    nextui(), 
   ],
+  darkMode: "class",
   daisyui: {
     themes : ['light']
   },
