@@ -95,7 +95,7 @@ model Contratos {
   fechaInicio DateTime
   fechaTermino DateTime
   pagos        Pagos[]
-  idPago       String
+  idPago       String?
   detallesContrato ContratoDetallePupilo[]
   Apoderado Apoderados?
   CreatedAt    DateTime  @default(now())
