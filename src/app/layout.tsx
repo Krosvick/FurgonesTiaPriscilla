@@ -5,6 +5,7 @@ import { esES } from "@clerk/localizations";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
+import { Providers } from "./providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,13 +30,15 @@ export default function RootLayout({
         footer: 'hidden',
       },
     }}> 
-    <html lang="en">
-      <body className={`font-sans ${inter.variable}  min-h-screen`}>
-        <TRPCReactProvider cookies={cookies().toString()}>
-          {children}
-        </TRPCReactProvider>
-      </body>
-    </html>
+        <html lang="en">
+          <body className={`font-sans ${inter.variable}  min-h-screen`}>
+            <Providers>
+              <TRPCReactProvider cookies={cookies().toString()}>
+                {children}
+              </TRPCReactProvider>
+            </Providers>
+          </body>
+        </html>
     </ClerkProvider>
   );
 }
