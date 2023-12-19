@@ -33,3 +33,13 @@ export const detalleSchema = z.object({
     idContrato: z.string().uuid().optional(),
     idPupilo: z.string().uuid().optional(),
 });
+
+export const pagoSchema = z.object({
+    monto: z.number(),
+    fechaInicio: z.string().transform((str) => new Date(str)),
+    fechaTermino: z.string().transform((str) => new Date(str)).optional(),
+    idContrato: z.string().uuid(),
+    idApoderado: z.string().uuid(),
+    estado: z.enum(["Pagado", "Pendiente", "Atrasado", "Inactivo"]),
+    fechaPago: z.string().transform((str) => new Date(str)).optional(),
+});
