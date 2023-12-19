@@ -35,11 +35,16 @@ export const detalleSchema = z.object({
 });
 
 export const pagoSchema = z.object({
-    monto: z.number(),
-    fechaInicio: z.string().transform((str) => new Date(str)),
-    fechaTermino: z.string().transform((str) => new Date(str)).optional(),
+    monto: z.number().positive(),
+    fechaInicio: z.date(),
+    fechaTermino: z.date(),
     idContrato: z.string().uuid(),
     idApoderado: z.string().uuid(),
     estado: z.enum(["Pagado", "Pendiente", "Atrasado", "Inactivo"]),
-    fechaPago: z.string().transform((str) => new Date(str)).optional(),
+    fechaPago: z.date().optional(),
+});
+
+export const pagoFormSchema = z.object({
+    fechaInicio: z.string().transform((str) => new Date(str)),
+    idContrato: z.string().uuid().optional(),
 });
