@@ -25,7 +25,7 @@ model Apoderados {
   pagos        Pagos[]
   CreatedAt    DateTime  @default(now())
   UpdatedAt    DateTime  @updatedAt
-  DeletedAt    DateTime? @default(now())
+  DeletedAt    DateTime? 
 }
 
 model Direcciones {
@@ -38,7 +38,7 @@ model Direcciones {
   detalle ContratoDetallePupilo[]
   CreatedAt    DateTime  @default(now())
   UpdatedAt    DateTime  @updatedAt
-  DeletedAt    DateTime? @default(now())
+  DeletedAt    DateTime?
 
 }
 
@@ -53,7 +53,7 @@ model Pupilos {
   detalle ContratoDetallePupilo?
   CreatedAt    DateTime  @default(now())
   UpdatedAt    DateTime  @updatedAt
-  DeletedAt    DateTime? @default(now())
+  DeletedAt    DateTime?
 
   @@index([idApoderado], name: "idApoderado")
 }
@@ -67,7 +67,7 @@ enum EstadoPagoDetalle {
 model Pagos {
   idPago String @id @default(uuid())
   fechaInicio DateTime
-  fechaTermino DateTime  
+  fechaTermino DateTime?  
   apoderado Apoderados @relation(fields: [idApoderado], references: [idApoderado])
   idApoderado String
   contrato Contratos @relation(fields: [idContrato], references: [idContrato])
@@ -76,7 +76,7 @@ model Pagos {
   monto Int
   CreatedAt    DateTime  @default(now())
   UpdatedAt    DateTime  @updatedAt
-  DeletedAt    DateTime? @default(now())
+  DeletedAt    DateTime?
 
   @@index([idApoderado], name: "idApoderado")
   @@index([idContrato])
@@ -100,7 +100,7 @@ model Contratos {
   Apoderado Apoderados?
   CreatedAt    DateTime  @default(now())
   UpdatedAt    DateTime  @updatedAt
-  DeletedAt    DateTime? @default(now())
+  DeletedAt    DateTime?
 
   @@index([idPago], name: "idPago")
 }
@@ -116,7 +116,7 @@ model ContratoDetallePupilo {
   idPupilo String @unique
   CreatedAt    DateTime  @default(now())
   UpdatedAt    DateTime  @updatedAt
-  DeletedAt    DateTime? @default(now())
+  DeletedAt    DateTime?
 
   @@index([idContrato], name: "idContrato")
   @@index([idPupilo], name: "idPupilo")
