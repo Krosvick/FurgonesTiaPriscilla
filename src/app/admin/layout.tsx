@@ -19,17 +19,20 @@ export default function AdminLayout(props: AdminLayoutProps) {
     );
 
     return (
-        <main className="bg-gradient-to-r from-violet-600 to-indigo-600">
-            <Navbar 
-                title="Administración"
-                showAuthInfo={true}
-                className="bg-gray-100"
-            />
+        <main className="bg-gradient-to-br from-indigo-300 to-red-200 pt-5">
+            <header className="mx-5 sticky top-0 z-50">
+                <Navbar 
+                    title="Administración"
+                    showAuthInfo={true}
+                    className="bg-gray-100 rounded-full"
+                />
+            </header>
             <Sidebar 
                 sidebarItems={[
                     <Link href="/admin">Inicio</Link>,
-                    <Link href="/admin/Apoderados">Apoderados</Link>,
-                    <Link href="/admin/Furgones">Furgones</Link>,
+                    <Link href="/admin/contratos">Contratos</Link>,
+                    <Link href="/admin/apoderados">Apoderados</Link>,
+                    <Link href="/admin/furgones">Furgones</Link>,
 
                 ]}
                 sidebarButton={drawerButton}
