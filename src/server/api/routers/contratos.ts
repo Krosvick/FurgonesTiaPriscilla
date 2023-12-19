@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
-import { contratoBackendSchema } from "~/server/zodTypes/contratoTypes";
+import { contratoBackendSchema, detalleSchema } from "~/server/zodTypes/contratoTypes";
 
 export const ContratosRouter = createTRPCRouter({
     create: adminProcedure
@@ -12,7 +12,6 @@ export const ContratosRouter = createTRPCRouter({
                 nombre: input.nombre,
                 descripcion: input.descripcion,
                 fechaInicio: input.fechaInicio,
-                fechaTermino: input.fechaTermino,
                 Apoderado: {
                     connect: {
                         rut: input.rut,
@@ -34,12 +33,47 @@ export const ContratosRouter = createTRPCRouter({
     getById: adminProcedure
         .input(z.string().uuid())
         .query(async ({ ctx, input }) => {
-        return ctx.db.contratos.findUnique({
+        const contrato = await ctx.db.contratos.findUnique({
             where: {
                 idContrato: input,
             },
             include: {
                 Apoderado: true,
+            },
+        });
+        return contrato;
+    }),
+    createDetalleContrato: adminProcedure
+        .input(detalleSchema)
+        .mutation(async ({ ctx, input }) => {
+        switch (input.tipo) {
+            case "ida":
+                input.precio = 40000;
+                break;
+            case "vuelta":
+                input.precio = 40000;
+                break;
+            case "idaYvuelta":
+                input.precio = 70000;
+                break;
+            default:
+                input.precio = 0;
+                break;
+        }
+        return ctx.db.contratoDetallePupilo.create({
+            data: {
+                precio: input.precio,
+                tipo: input.tipo,
+                contrato: {
+                    connect: {
+                        idContrato: input.idContrato,
+                    },
+                },
+                pupilo: {
+                    connect: {
+                        idPupilo: input.idPupilo,
+                    },
+                },
             },
         });
     }),
