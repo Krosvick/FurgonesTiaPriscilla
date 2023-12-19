@@ -93,7 +93,7 @@ model Contratos {
   nombre      String?
   descripcion String?
   fechaInicio DateTime
-  fechaTermino DateTime
+  fechaTermino DateTime?
   pagos        Pagos[]
   idPago       String?
   detallesContrato ContratoDetallePupilo[]
@@ -107,7 +107,7 @@ model Contratos {
 
 model ContratoDetallePupilo {
   idTipoDeContrato String @id @default(uuid())
-  precio String
+  precio Int
   direccion Direcciones[]
   tipo TiposDeContrato
   contrato Contratos @relation(fields: [idContrato], references: [idContrato])
