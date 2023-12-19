@@ -1,4 +1,6 @@
 import { ApoderadosRouter } from "~/server/api/routers/apoderados";
+import { ContratosRouter } from "./routers/contratos";
+import { PupilosRouter } from "./routers/pupilos";
 import { createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -8,6 +10,8 @@ import { createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   apoderados: ApoderadosRouter,
+  contratos: ContratosRouter,
+  pupilos: PupilosRouter,
 });
 
 // export type definition of API
