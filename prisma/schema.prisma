@@ -72,8 +72,9 @@ model Pagos {
   idApoderado String
   contrato Contratos @relation(fields: [idContrato], references: [idContrato])
   idContrato String
-  estado EstadoPagoDetalle
+  estado EstadoPagoDetalle @default(Inactivo)
   monto Int
+  fechaPago DateTime?
   CreatedAt    DateTime  @default(now())
   UpdatedAt    DateTime  @updatedAt
   DeletedAt    DateTime?
