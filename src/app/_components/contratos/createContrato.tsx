@@ -28,15 +28,15 @@ export function CreateContrato() {
     
 
     const createContrato = api.contratos.create.useMutation({
-        onSuccess: () => {
+        onSuccess: (data) => {
             console.log("success")
+            router.push(`/admin/contratos/${data.idContrato}`);
         },
     });
 
     const createApoderado = api.apoderados.create.useMutation({
-        onSuccess: () => {
-            //router push to /admin/contratos/${contrato.idContrato}
-            router.push(`/admin/contratos/${contrato?.idContrato}`);
+        onSuccess: (data) => {
+            console.log("success")
         },
     });
 
@@ -58,6 +58,7 @@ export function CreateContrato() {
                 }
                 if (contrato && isValid){
                     contrato.rut = data.rut
+                    console.log(data);
                     await createApoderado.mutateAsync(data as Apoderado);
                     await createContrato.mutateAsync(contrato as Contrato);
                 }
@@ -79,7 +80,6 @@ export function CreateContrato() {
                             <input type="text" placeholder="Nombre" {...register("nombre")} />
                             <input type="text" placeholder="Descripción" {...register("descripcion")} />
                             <input type="datetime-local" placeholder="Fecha de inicio" {...register("fechaInicio")} />
-                            <input type="datetime-local" placeholder="Fecha de termino" {...register("fechaTermino")} />
                             <button className="btn" type="submit">Next</button>
                         </>
                     );
