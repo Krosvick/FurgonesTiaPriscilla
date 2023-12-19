@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
-import { contratoSchema } from "~/server/zodTypes/contratoTypes";
+import { contratoBackendSchema } from "~/server/zodTypes/contratoTypes";
 
 export const ContratosRouter = createTRPCRouter({
     create: adminProcedure
-        .input(contratoSchema)
+        .input(contratoBackendSchema)
         .mutation(async ({ ctx, input }) => {
         return ctx.db.contratos.create({
             data: {
@@ -21,4 +21,27 @@ export const ContratosRouter = createTRPCRouter({
             },
         });
     }),
+    getAll: adminProcedure.query(({ ctx }) => {
+        return ctx.db.contratos.findMany({
+            where: {
+                DeletedAt: null,
+            },
+            include: {
+                Apoderado: true,
+            },
+        });
+    }),
+    getById: adminProcedure
+        .input(z.string().uuid())
+        .query(async ({ ctx, input }) => {
+        return ctx.db.contratos.findUnique({
+            where: {
+                idContrato: input,
+            },
+            include: {
+                Apoderado: true,
+            },
+        });
+    }),
+
 });
