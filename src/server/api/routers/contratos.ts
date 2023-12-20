@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
-import { contratoBackendSchema, detalleSchema } from "~/server/zodTypes/contratoTypes";
+import { TRPCError } from "@trpc/server";
+import { contratoBackendSchema, detalleSchema, pagoSchema, pagoFormSchema, gestionarPagoSchema} from "~/server/zodTypes/contratoTypes";
 
 export const ContratosRouter = createTRPCRouter({
     create: adminProcedure
@@ -77,5 +78,113 @@ export const ContratosRouter = createTRPCRouter({
             },
         });
     }),
+    createPago: adminProcedure
+    .input(pagoFormSchema)
+    .mutation(async ({ ctx, input }) => {
+        try {
+            if (!input.idContrato || !input.fechaInicio) {
+                throw new TRPCError({
+                    code: 'BAD_REQUEST',
+                    message: 'Invalid input',
+                });
+            }
 
+            const contrato = await ctx.db.contratos.findUnique({
+                where: {
+                    idContrato: input.idContrato,
+                },
+                include: {
+                    detallesContrato: true,
+                    Apoderado: true,
+                },
+            });
+
+            if (!contrato?.detallesContrato || !contrato?.Apoderado) {
+                throw new TRPCError({
+                    code: 'NOT_FOUND',
+                    message: 'Contrato, detallesContrato, or Apoderado not found',
+                });
+            }
+
+            let total = 0;
+            contrato.detallesContrato.forEach((detalle) => {
+                total += detalle.precio;
+            });
+
+            const fechaTermino = new Date(input.fechaInicio);
+            fechaTermino.setMonth(fechaTermino.getMonth() + 1);
+
+            return ctx.db.pagos.create({
+                data: {
+                    monto: total,
+                    fechaInicio: input.fechaInicio,
+                    fechaTermino: fechaTermino,
+                    contrato: {
+                        connect: {
+                            idContrato: input.idContrato,
+                        },
+                    },
+                    apoderado: {
+                        connect: {
+                            rut: contrato.Apoderado.rut,
+                        },
+                    },
+                    estado: "Pendiente",
+                    fechaPago: null,
+                },
+            });
+        } catch (error) {
+            if (error instanceof TRPCError) {
+                throw error;
+            }
+            console.error(error);
+            throw new TRPCError({
+                code: 'INTERNAL_SERVER_ERROR',
+                message: 'An unexpected error occurred',
+            });
+        }
+    }),
+    getCurrentPago: adminProcedure
+    .input(z.string().uuid())
+    .query(async ({ ctx, input }) => {
+        const pagos = await ctx.db.pagos.findMany({
+            where: {
+                idContrato: input,
+            },
+            orderBy: {
+                fechaInicio: "desc",
+            },
+            take: 1,
+        });
+        return pagos[0];
+    }),
+    updatePago: adminProcedure
+    .input(gestionarPagoSchema)
+    .mutation(async ({ ctx, input }) => {
+        const pago = await ctx.db.pagos.findUnique({
+            where: {
+                idPago: input.idPago,
+            },
+        });
+
+        if (!pago) {
+            throw new TRPCError({
+                code: 'NOT_FOUND',
+                message: 'Pago not found',
+            });
+        }
+        return ctx.db.pagos.update({
+            where: {
+                idPago: input.idPago,
+            },
+            data: {
+                fechaInicio: input.fechaInicio,
+                fechaTermino: input.fechaTermino,
+                fechaPago: input.fechaPago,
+                estado: input.estado,
+                monto: input.monto,
+            },
+        });
+    }),
+    
 });

@@ -48,3 +48,12 @@ export const pagoFormSchema = z.object({
     fechaInicio: z.string().transform((str) => new Date(str)),
     idContrato: z.string().uuid().optional(),
 });
+
+export const gestionarPagoSchema = z.object({
+    idPago: z.string().uuid().optional(),
+    fechaInicio: z.string().transform((str) => new Date(str)),
+    fechaTermino: z.string().transform((str) => new Date(str)),
+    estado: z.enum(["Pagado", "Pendiente", "Atrasado", "Inactivo"]),
+    monto: z.number().positive(),
+    fechaPago: z.string().transform((str) => new Date(str)).nullable(),
+});
