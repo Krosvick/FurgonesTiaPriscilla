@@ -43,8 +43,10 @@ export function Navbar({ logo, title, elements = [], showAuthInfo, className }: 
               <li key={index}>{element}</li>
             ))}
             {showAuthInfo ? 
-              <div className="mx-5 scale-150">
-                <SignedIn><UserButton /></SignedIn>
+              <div className="mx-5">
+                <div className="scale-150">
+                  <SignedIn><UserButton /></SignedIn>
+                </div>
                 <SignedOut>
                   <SignInButton mode="modal">
                     <button className="btn shadow-md">Iniciar Sesion</button>
