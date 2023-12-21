@@ -14,13 +14,16 @@ export default async function Home() {
             <Link href="/envios">Envio</Link>,
             <Link href="/rastreo">Rastreo</Link>,
             <Link href="/cotizacion">Cotizacion</Link>,
+            <Link href="/pagar">
+              <button className="btn">Pagar</button>
+            </Link>
           ]}
           showAuthInfo={true}
           className="rounded-md bg-gray-100"
         />
       </header>
       <section className="max-w-screen p-5">
-        <Container>
+        <Container bgColor="bg-gray-200" className="bg-opacity-20">
           <div className="flex justify-center items-center h-screen">
             <div className="w-3/4">
               <h1 className="text-4xl font-bold">Furgones Tia Priscilla</h1>

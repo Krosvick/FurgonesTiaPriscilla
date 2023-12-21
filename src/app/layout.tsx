@@ -30,7 +30,7 @@ export default function RootLayout({
         footer: 'hidden',
       },
     }}> 
-        <html lang="en">
+        <html lang="en" className="light">
           <body className={`font-sans ${inter.variable}  min-h-screen`}>
             <Providers>
               <TRPCReactProvider cookies={cookies().toString()}>
