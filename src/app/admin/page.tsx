@@ -8,12 +8,11 @@ import { WebpayForm } from "../_components/webpay/webpayTest";
 export default async function Admin(){
     const apoderados = await api.apoderados.getAll.query();
     //const response = await api.apoderados.webpayTest.query();
-    const hola = await api.apoderados.nombre.query({text: "hola"});
     
     return (
-        <section className="max-w-screen">
-            <Container>
-                <div className="w-[120vh] h-screen">
+        <section className="w-full">
+            <Container bgColor="bg-gray-800" className="rounded-3xl bg-opacity-20">
+                <div className="w-full min-h-screen">
                     {apoderados?.map((apoderado) => (
                         <div className="bg-red-300" key={apoderado.idApoderado}>
                             <h1>este es el aporado: {apoderado.idApoderado}</h1>
@@ -21,6 +20,7 @@ export default async function Admin(){
                             <h2>apellido: {apoderado.apellido}</h2>
                             <h3>telefono: {apoderado.telefono}</h3>
                             <h4>correo: {apoderado.correo}</h4>
+                            <h4>rut: {apoderado.rut}</h4>
                         </div>
                     ))}
                     <CreateApoderado />

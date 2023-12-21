@@ -1,8 +1,5 @@
-"use client";
-
 import { Navbar } from "~/app/_components/Navbar";
 import { Sidebar } from "~/app/_components/Sidebar";
-import { useState } from "react";
 import Link from "next/link";
 
 interface AdminLayoutProps {
