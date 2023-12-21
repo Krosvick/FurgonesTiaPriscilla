@@ -188,10 +188,6 @@ export const ContratosRouter = createTRPCRouter({
     }),
     checkPagos: publicProcedure
     .mutation(async ({ ctx }) => {
-        //this is the thing
-        //this will check all current pagos fechaTermino
-        //if is 7 days from fechaTermino and estado is Pendiente
-        //then update estado to Atrasado
         const pagos = await ctx.db.pagos.findMany({
             where: {
                 estado: "Pendiente",
@@ -200,8 +196,9 @@ export const ContratosRouter = createTRPCRouter({
                 }
             },
         });
-        pagos.forEach(async (pago) => {
-            await ctx.db.pagos.update({
+
+        const updatedPagos = await Promise.all(pagos.map(async (pago) => {
+            return ctx.db.pagos.update({
                 where: {
                     idPago: pago.idPago,
                 },
@@ -209,22 +206,56 @@ export const ContratosRouter = createTRPCRouter({
                     estado: "Atrasado",
                 },
             });
-        });
-        return pagos;
+        }));
+
+        return updatedPagos;
     }),
 
     createNewPagos: publicProcedure
     .mutation(async ({ ctx }) => {
-        const pagos = await ctx.db.pagos.findMany({
+        const date37daysAgo = new Date(new Date().setDate(new Date().getDate() - 37));
+        let pagos = await ctx.db.pagos.findMany({
             where: {
-                estado: "Pagado",
                 fechaTermino: {
-                    lte: new Date(),
-                }
+                    gte: date37daysAgo,
+                },
             },
         });
 
-        const pagosPromises = pagos.map(async (pago) => {
+        //keep one pago per apoderado, just the most recent one
+        //pagos schema is the following
+        /*pago {
+            idPago: string;
+            fechaInicio: Date;
+            fechaTermino: Date | null;
+            idApoderado: string;
+            idContrato: string;
+            estado: $Enums.EstadoPagoDetalle;
+            monto: number;
+            fechaPago: Date | null;
+            CreatedAt: Date;
+            UpdatedAt: Date;
+            DeletedAt: Date | null;
+        }*/
+        const pagosMap = new Map();
+        pagos.forEach((pago) => {
+            if (!pagosMap.has(pago.idApoderado)) {
+                pagosMap.set(pago.idApoderado, pago);
+            } else {
+                const pagoMap = pagosMap.get(pago.idApoderado);
+                if (pagoMap.fechaInicio < pago.fechaInicio) {
+                    pagosMap.set(pago.idApoderado, pago);
+                }
+            }
+        });
+        
+        const pagosArray = Array.from(pagosMap.values());
+        console.log(pagosArray);
+
+        const pagosPromises = pagosArray.map(async (pago) => {
+            if(pago.estado !== "Pagado"){
+                return;
+            }
             const contrato = await ctx.db.contratos.findUnique({
                 where: {
                     idContrato: pago.idContrato,
@@ -238,6 +269,10 @@ export const ContratosRouter = createTRPCRouter({
             if (!contrato?.detallesContrato || !contrato?.Apoderado) {
                 // Log the error and continue with the next pago
                 console.error('Contrato, detallesContrato, or Apoderado not found for pago id:', pago.idPago);
+                return;
+            }
+            if (contrato?.fechaTermino && contrato.fechaTermino <= new Date()) {
+                console.error('Contrato is expired for pago id:', pago.idPago);
                 return;
             }
 
@@ -254,8 +289,8 @@ export const ContratosRouter = createTRPCRouter({
                 fechaInicio = new Date(pago.fechaPago);
             } else {
                 fechaInicio = new Date(pago.fechaTermino);
+                fechaInicio.setMonth(fechaInicio.getMonth() + 1);
             }
-            fechaInicio.setMonth(fechaInicio.getMonth() + 1);
 
             const fechaTermino = new Date(fechaInicio);
             fechaTermino.setMonth(fechaTermino.getMonth() + 1);
