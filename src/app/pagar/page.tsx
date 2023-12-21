@@ -66,7 +66,7 @@ export default function PagoCliente(){
   const returnUrl = env.NEXT_PUBLIC_PAYMENT_API_URL + "/" + rut.formatted;
   const onSubmit: SubmitHandler<{ rut: string; }> = async (data) => {
     await refetch();
-    };
+  };
 
     const { data: webpayData, isLoading: isLoadingWebpay} = api.apoderados.webpayPago.useQuery(
     {
@@ -74,7 +74,7 @@ export default function PagoCliente(){
         monto: datosdePago?.monto,
     }, 
     {
-        enabled: (isFetched && hayDatos)
+        enabled: (isFetched && hayDatos && datosdePago?.estado != "Pagado" && datosdePago?.estado != "Inactivo")
     }
     );
     console.log(webpayData);
@@ -124,7 +124,8 @@ export default function PagoCliente(){
                   <>
                     <ModalHeader>Gestionar Pago</ModalHeader>
                     <ModalBody>
-                      {hayDatos && !isLoading && datosdePago && !isLoadingWebpay ? (
+
+                      {hayDatos && !isLoading && datosdePago && !isLoadingWebpay && datosdePago.estado != "Pagado" && datosdePago.estado != "Inactivo" ? (
                         <form action={webpayData?.url} method="post">
                           <input type="hidden" name="token_ws" value={webpayData?.token}/>
                           <Button isDisabled={isLoadingWebpay} type="submit" color="primary" radius="sm" size="lg" className="font-medium">
@@ -133,6 +134,8 @@ export default function PagoCliente(){
                         </form>
                       ) : !hayDatos && !isLoading ? (
                         <p>No hay datos asociados a este Rut</p>
+                      ) : datosdePago?.estado == "Pagado" ? (
+                        <p>La cuota de este mes ya esta pagada</p>
                       ) : (
                         <p>Buscando...</p>
                       )}
