@@ -10,6 +10,7 @@ import {
   Input,
   Select,
   SelectItem,
+  Button
 } from "@nextui-org/react";
 import Form from "../Form";
 import { SubmitHandler, useForm} from "react-hook-form";
@@ -45,6 +46,7 @@ export function PupilosModal({idApoderado, idContrato}: PupilosModalProps) {
     const createPupilo = api.pupilos.create.useMutation({
         onSuccess: (data) => {
             console.log("success")
+            //@ts-ignore
             queryClient.invalidateQueries("pupilos.getAll");
         },
     });
@@ -52,6 +54,7 @@ export function PupilosModal({idApoderado, idContrato}: PupilosModalProps) {
     const createDetalle = api.contratos.createDetalleContrato.useMutation({
         onSuccess: (data) => {
             console.log("success")
+            //@ts-ignore
             queryClient.invalidateQueries("contratos.getAll");
         },
     });
@@ -88,8 +91,8 @@ export function PupilosModal({idApoderado, idContrato}: PupilosModalProps) {
             dark={false}
             headElements={[
             <div>
-                <button className="btn btn-neutral" onClick={onOpen}>Crear</button>
-                <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                <Button color="primary" radius="md" size="lg" variant="shadow" className="font-medium" onClick={onOpen}>Crear</Button>
+                <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange}>
                     <ModalContent>
                     {(onClose) => (
                         <>
