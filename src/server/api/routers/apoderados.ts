@@ -39,12 +39,15 @@ export const ApoderadosRouter = createTRPCRouter({
     return ctx.db.apoderados.findMany();
   }),
 
-  webpayTest: publicProcedure
-  .input(z.object({ returnURL: z.string() }))
+  webpayPago: publicProcedure
+  .input(z.object({ 
+    returnURL: z.string(),
+    monto: z.number()
+  }))
   .query(async ({ ctx, input }) => {
     let buyOrder = "O-" + Math.floor(Math.random() * 10000) + 1;
     let sessionId = "S-" + Math.floor(Math.random() * 10000) + 1;
-    let amount = Math.floor(Math.random() * 1000) + 1001;
+    let amount = input.monto;
     let returnUrl = input.returnURL;
     const createResponse = await (new WebpayPlus.Transaction()).create(
       buyOrder, 
@@ -55,6 +58,113 @@ export const ApoderadosRouter = createTRPCRouter({
     let token = createResponse.token;
     let url = createResponse.url;
     return { token, url, amount };
+  }),
+
+  webpayCommit: publicProcedure
+  .input(z.object({ 
+    token: z.string(),
+    rut: z.string()
+  }))
+  .mutation(async ({ ctx, input }) => {
+    let token = input.token;
+    const commitResponse = await (new WebpayPlus.Transaction()).commit(token);
+    //if commitResponse.response_code == 0 then we set the apoderado.pago[](the last one)
+    if (commitResponse.response_code == 0) {
+      const apoderado = await ctx.db.apoderados.findFirst({
+        where: {
+          rut: input.rut
+        },
+        select: {
+          pagos: {
+            take: 1,
+            orderBy: {
+              fechaInicio: 'desc'
+            }
+          }
+        }
+      });
+      if (apoderado && apoderado.pagos && apoderado.pagos.length > 0) {
+        const firstPago = apoderado.pagos[0];
+        if (firstPago) {
+          commitResponse.idPago = firstPago.idPago;
+          await ctx.db.pagos.update({
+            where: {
+              idPago: firstPago.idPago
+            },
+            data: {
+              estado: "Pagado",
+              fechaPago: new Date()
+            }
+          });
+        }
+      }
+    }
+    return commitResponse;
+  }),
+
+  detallesPagoMensual: publicProcedure
+  .input(z.string())
+  .query(async ({ ctx, input }) => {
+    const rut = input;
+    const detalles = await ctx.db.contratos.findFirst({
+      where: {
+        Apoderado: {
+          rut: rut
+        }
+      },
+      select: {
+        detallesContrato: {
+          select: {
+            pupilo: {
+              select: {
+                nombre: true,
+                apellido: true,
+                colegio: true,
+              },
+            },
+            tipo: true,
+          }
+        },
+        pagos: {
+          take: 1,
+          orderBy: {
+            fechaInicio: 'desc'
+          },
+          select: {
+            monto: true,
+            fechaTermino: true,
+            estado: true,
+          }
+        }
+    }
+    });
+    return detalles;
+  }),
+  detallePagoActivo: publicProcedure
+  .input(z.string())
+  .query(async ({ ctx, input }) => {
+    const rut = input;
+    const detalles = await ctx.db.apoderados.findFirst({
+      where: {
+        rut: rut
+      },
+      select: {
+        pagos: {
+          take: 1,
+          orderBy: {
+            fechaInicio: 'desc'
+          },
+          select: {
+            idPago: true,
+            monto: true,
+            fechaTermino: true,
+            fechaPago: true,
+            estado: true,
+          }
+        }
+      }
+    });
+    return detalles;
   }),
 });
 
