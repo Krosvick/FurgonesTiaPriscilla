@@ -186,5 +186,102 @@ export const ContratosRouter = createTRPCRouter({
             },
         });
     }),
-    
+    checkPagos: publicProcedure
+    .mutation(async ({ ctx }) => {
+        //this is the thing
+        //this will check all current pagos fechaTermino
+        //if is 7 days from fechaTermino and estado is Pendiente
+        //then update estado to Atrasado
+        const pagos = await ctx.db.pagos.findMany({
+            where: {
+                estado: "Pendiente",
+                fechaTermino: {
+                    lte: new Date(new Date().setDate(new Date().getDate() - 7)),
+                }
+            },
+        });
+        pagos.forEach(async (pago) => {
+            await ctx.db.pagos.update({
+                where: {
+                    idPago: pago.idPago,
+                },
+                data: {
+                    estado: "Atrasado",
+                },
+            });
+        });
+        return pagos;
+    }),
+
+    createNewPagos: publicProcedure
+    .mutation(async ({ ctx }) => {
+        const pagos = await ctx.db.pagos.findMany({
+            where: {
+                estado: "Pagado",
+                fechaTermino: {
+                    lte: new Date(),
+                }
+            },
+        });
+
+        const pagosPromises = pagos.map(async (pago) => {
+            const contrato = await ctx.db.contratos.findUnique({
+                where: {
+                    idContrato: pago.idContrato,
+                },
+                include: {
+                    detallesContrato: true,
+                    Apoderado: true,
+                },
+            });
+
+            if (!contrato?.detallesContrato || !contrato?.Apoderado) {
+                // Log the error and continue with the next pago
+                console.error('Contrato, detallesContrato, or Apoderado not found for pago id:', pago.idPago);
+                return;
+            }
+
+            let total = 0;
+            contrato.detallesContrato.forEach((detalle) => {
+                total += detalle.precio;
+            });
+            if (pago.fechaTermino === null) {
+                console.error('fechaTermino is null for pago id:', pago.idPago);
+                return;
+            }
+            let fechaInicio;
+            if (pago.fechaPago !== null && pago.fechaTermino < pago.fechaPago) {
+                fechaInicio = new Date(pago.fechaPago);
+            } else {
+                fechaInicio = new Date(pago.fechaTermino);
+            }
+            fechaInicio.setMonth(fechaInicio.getMonth() + 1);
+
+            const fechaTermino = new Date(fechaInicio);
+            fechaTermino.setMonth(fechaTermino.getMonth() + 1);
+
+            await ctx.db.pagos.create({
+                data: {
+                    monto: total,
+                    fechaInicio: fechaInicio,
+                    fechaTermino: fechaTermino,
+                    contrato: {
+                        connect: {
+                            idContrato: pago.idContrato,
+                        },
+                    },
+                    apoderado: {
+                        connect: {
+                            rut: contrato.Apoderado.rut,
+                        },
+                    },
+                    estado: "Pendiente",
+                    fechaPago: null,
+                },
+            });
+        });
+
+        await Promise.all(pagosPromises);
+        return pagos;
+    }),
 });
