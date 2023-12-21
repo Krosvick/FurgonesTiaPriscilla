@@ -18,6 +18,7 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     CLERK_SECRET_KEY: z.string(),
+    CRON_SECRET: z.string(),
   },
 
   /**
@@ -46,6 +47,7 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL,
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL,
     NEXT_PUBLIC_PAYMENT_API_URL: process.env.NEXT_PUBLIC_PAYMENT_API_URL,
+    CRON_SECRET: process.env.CRON_SECRET,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
