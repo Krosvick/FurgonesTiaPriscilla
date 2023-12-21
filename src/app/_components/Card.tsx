@@ -14,7 +14,7 @@ export function Card({ title, description, dark, className, children, headElemen
 
   return (
     <div className={`${cardClasses} ${className}`}>
-      <div className='w-full flex justify-between'>
+      <div className='flex justify-between'>
         <div>
             {title && <h3 className="text-2xl font-medium">{title}</h3>}
             {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
