@@ -30,6 +30,7 @@ export default function AdminLayout(props: AdminLayoutProps) {
                     <Link href="/admin/contratos">Contratos</Link>,
                     <Link href="/admin/apoderados">Apoderados</Link>,
                     <Link href="/admin/furgones">Furgones</Link>,
+                    <Link href="/admin/pagos">Pagos</Link>,
 
                 ]}
                 sidebarButton={drawerButton}
