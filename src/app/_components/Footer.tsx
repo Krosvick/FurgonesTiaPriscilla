@@ -2,7 +2,7 @@ import { Container } from "./Container";
 
 export function Footer(){
     return (
-      <footer className="max-w-screen p-5 bg-white">
+      <footer className="max-w-screen p-5 bg-white outline outline-2">
           <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-5 text-center">
             <div>
               <a className="flex-none text-xl font-semibold text-black" href="#" aria-label="Brand">Brand</a>
