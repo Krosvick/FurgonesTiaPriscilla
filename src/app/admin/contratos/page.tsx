@@ -2,10 +2,10 @@ import { Container } from "~/app/_components/Container";
 import { Card } from "~/app/_components/Card";
 import Link from "next/link";
 import { api } from "~/trpc/server";
+import { Divider } from "@nextui-org/react";
 
 export default async function ContratosIndex(){
     const contratos = await api.contratos.getAll.query();
-    console.log(contratos);
     return (
         <section className="w-full">
             <Container bgColor="bg-gray-100" className="rounded-3xl bg-opacity-50">
@@ -19,19 +19,28 @@ export default async function ContratosIndex(){
                     ]}
                     >
                     </Card>
+                    <div className="mt-5">
                     {contratos && contratos.map((contrato) => (
-                        <div className="bg-red-300" key={contrato.idContrato}>
-                            <h1>este es el contrato: {contrato.idContrato}</h1>
-                            <h1>nombre: {contrato.nombre}</h1>
-                            <h3>descripción: {contrato.descripcion}</h3>
-                            <h3>fecha de Inicio: {new Date(contrato.fechaInicio).toLocaleDateString()}</h3>
-                            <h3>fecha de Termino: {new Date(contrato.fechaTermino).toLocaleDateString()}</h3>
-                            <h4>apoderado nombre: {contrato.Apoderado?.nombre}</h4>
-                            <h4>apoderado rut: {contrato.Apoderado?.rut}</h4>
-                            <Link href={`/admin/contratos/${contrato.idContrato}`}><button className="btn btn-neutral">Ver Contrato</button></Link>
+                        <div className="p-6 bg-slate-100 border border-gray-200 rounded-lg shadow mb-4" key={contrato.idContrato}>
+                            <h1 className="text-2xl font-bold mb-2">Nombre del contrato: {contrato.nombre}</h1>
+                            <Divider className="my-4"/>
+                            <p className="font-bold text-lg mb-1">Descripción:</p>
+                            <p className="mb-2">{contrato.descripcion}</p>
+                            <p className="font-bold text-lg mb-1">Fecha de inicio:</p>
+                            <p className="mb-2">{contrato.fechaInicio.toLocaleDateString()}</p>
+                            <p className="font-bold text-lg mb-1">Fecha de termino:</p>
+                            <p className="mb-2">{contrato.fechaTermino?.toLocaleDateString()}</p>
+                            <p className="font-bold text-lg mb-1">Apoderado:</p>
+                            <p className="mb-2">{contrato.Apoderado?.nombre} {contrato.Apoderado?.apellido}</p>
+                            <p className="font-bold text-lg mb-1">Rut:</p>
+                            <p className="mb-2">{contrato.Apoderado?.rut}</p>
+                            <Link href={`/admin/contratos/${contrato.idContrato}`} className="mt-5">
+                                <button className="btn btn-neutral">Ver Contrato</button>
+                            </Link>
                         </div>
                     ))    
                     }
+                    </div>
                 </div>
             </Container>
         </section>
