@@ -4,7 +4,7 @@ export const contratoFrontendSchema = z.object({
     nombre: z.string(),
     descripcion: z.string(),
     fechaInicio: z.string().transform((str) => new Date(str)),
-    rut: z.string().optional(),
+    rut: z.string()
 });
 
 export const contratoBackendSchema = z.object({
