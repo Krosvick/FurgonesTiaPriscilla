@@ -28,7 +28,7 @@ type PupilosModalProps = {
     idContrato: string;
 }
 
-export function PupilosModal({idApoderado, idContrato}: PupilosModalProps) {
+export function CreatePupilosModal({idApoderado, idContrato}: PupilosModalProps) {
     const queryClient = useQueryClient();
 
     const combinedSchema = z.object({
@@ -121,7 +121,7 @@ export function PupilosModal({idApoderado, idContrato}: PupilosModalProps) {
                                             <SelectItem key="vuelta" value="vuelta">Vuelta</SelectItem>
                                             <SelectItem key="idaYvuelta" value="idaYvuelta">Ida y vuelta</SelectItem>
                                         </Select>
-                                        <button className="btn" type="submit">Agregar</button>
+                                        <Button className="bg-gray-600 py-5 text-white" variant="solid" type="submit" isDisabled={!isValid}>Agregar</Button>
                                     </>
                                 )}
                             </Form>
