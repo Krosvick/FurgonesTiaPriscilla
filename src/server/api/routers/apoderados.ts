@@ -49,6 +49,7 @@ export const ApoderadosRouter = createTRPCRouter({
     let sessionId = "S-" + Math.floor(Math.random() * 10000) + 1;
     let amount = input.monto;
     let returnUrl = input.returnURL;
+    //@ts-ignore
     const createResponse = await (new WebpayPlus.Transaction()).create(
       buyOrder, 
       sessionId, 
@@ -67,6 +68,7 @@ export const ApoderadosRouter = createTRPCRouter({
   }))
   .mutation(async ({ ctx, input }) => {
     let token = input.token;
+    //@ts-ignore
     const commitResponse = await (new WebpayPlus.Transaction()).commit(token);
     //if commitResponse.response_code == 0 then we set the apoderado.pago[](the last one)
     if (commitResponse.response_code == 0) {
