@@ -71,7 +71,7 @@ export default function PagoCliente(){
     const { data: webpayData, isLoading: isLoadingWebpay} = api.apoderados.webpayPago.useQuery(
     {
         returnURL: returnUrl, 
-        monto: datosdePago?.monto,
+        monto: datosdePago!.monto,
     }, 
     {
         enabled: (isFetched && hayDatos && datosdePago?.estado != "Pagado" && datosdePago?.estado != "Inactivo")
