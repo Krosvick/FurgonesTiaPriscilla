@@ -16,12 +16,12 @@ export default function AdminLayout(props: AdminLayoutProps) {
     );
 
     return (
-        <main className="bg-gradient-to-br from-indigo-300 to-red-200 pt-5">
-            <header className="mx-5 sticky top-0 z-50">
+        <main className="bg-gradient-to-br from-indigo-300 to-red-200">
+            <header className="sticky top-0 z-50">
                 <Navbar 
                     title="Administración"
                     showAuthInfo={true}
-                    className="bg-gray-100 rounded-full"
+                    className="bg-gray-100"
                 />
             </header>
             <Sidebar 
