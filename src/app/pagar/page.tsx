@@ -68,18 +68,16 @@ export default function PagoCliente(){
     await refetch();
   };
 
-    if (datosdePago?.monto !== undefined) {
-      const { data: webpayData, isLoading: isLoadingWebpay} = api.apoderados.webpayPago.useQuery(
-        {
-          returnURL: returnUrl, 
-          monto: datosdePago.monto,
-        }, 
-        {
-          enabled: (isFetched && hayDatos && datosdePago.estado != "Pagado" && datosdePago.estado != "Inactivo")
-        }
-      );
-      console.log(webpayData);
+    const { data: webpayData, isLoading: isLoadingWebpay} = api.apoderados.webpayPago.useQuery(
+    {
+        returnURL: returnUrl, 
+        monto: datosdePago?.monto ?? 0,
+    }, 
+    {
+        enabled: (isFetched && hayDatos && datosdePago?.estado != "Pagado" && datosdePago?.estado != "Inactivo")
     }
+    );
+    console.log(webpayData);
 
     
     return (
