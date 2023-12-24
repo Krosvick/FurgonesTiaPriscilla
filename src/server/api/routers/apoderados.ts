@@ -89,7 +89,7 @@ export const ApoderadosRouter = createTRPCRouter({
           }
         }
       });
-      if (apoderado?.pagos?.length! > 0) {
+      if ((apoderado?.pagos?.length ?? 0) > 0) {
         const firstPago = apoderado?.pagos[0];
         if (firstPago) {
           commitResponse.idPago = firstPago.idPago;
