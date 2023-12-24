@@ -9,6 +9,7 @@ import { useRut } from "react-rut-formatter";
 import { contratoFrontendSchema } from "~/server/zodTypes/contratoTypes";
 import { apoderadoSchema } from "~/server/zodTypes/apoderadoTypes";
 import Form from "~/app/_components/Form"
+import { Input,Button } from "@nextui-org/react";
 
 type Contrato = z.infer<typeof contratoFrontendSchema>;
 type Apoderado = z.infer<typeof apoderadoSchema>;
@@ -20,7 +21,7 @@ export function CreateContrato() {
     const { rut, updateRut, isValid } = useRut();
 
     const methods = useForm<Contrato | Apoderado>({
-        resolver: zodResolver(step == 1 ? contratoFrontendSchema : apoderadoSchema),
+        resolver: zodResolver(step == 1 ? apoderadoSchema : contratoFrontendSchema),
     });
 
     const router = useRouter();
@@ -42,56 +43,43 @@ export function CreateContrato() {
 
     const onSubmit: SubmitHandler<Contrato | Apoderado> = async (data) => {
         if (step == 1) {
-            setContrato(data as Contrato);
-            setStep(2);
-            methods.reset();
-        } 
-        else if (step == 2) {
             setApoderado(data as Apoderado);
             try {
-                //add rut from apoderado to contrato data
-                if (!isValid) {
-                    methods.setError("rut", {
-                        type: "manual",
-                        message: "Rut invalido",
-                    });
-                }
-                if (contrato && isValid){
-                    contrato.rut = data.rut
-                    console.log(data);
-                    await createApoderado.mutateAsync(data as Apoderado);
-                    await createContrato.mutateAsync(contrato as Contrato);
-                }
+                setStep(2);
+                methods.reset();
             } catch (error) {
                 console.log(error);
+            }
+        } 
+        else if (step == 2) {
+            setContrato(data as Contrato);
+            if (contrato && isValid){
+                if(apoderado?.rut){
+                    contrato.rut = apoderado?.rut
+                }
+                if (contrato.rut) { // Check if rut is not undefined
+                    await createApoderado.mutateAsync(apoderado as Apoderado);
+                    await createContrato.mutateAsync(contrato as Contrato);
+                } else {
+                    console.error('Rut is undefined');
+                }
             }
         }else{
             return;
         }
     }
 
-
     return (
-        <Form methods={methods} onSubmit={onSubmit} className="flex flex-col m-5">
+        <Form methods={methods} onSubmit={onSubmit} className="flex flex-col gap-3 mt-5">
             {({ register, setValue, formState: { errors } }) => {
                 if (step === 1) {
                     return (
                         <>
-                            <input type="text" placeholder="Nombre" {...register("nombre")} />
-                            <input type="text" placeholder="Descripción" {...register("descripcion")} />
-                            <input type="datetime-local" placeholder="Fecha de inicio" {...register("fechaInicio")} />
-                            <button className="btn" type="submit">Next</button>
-                        </>
-                    );
-                } else if (step === 2) {
-                    return (
-                        <>
-                            {errors.rut && <p>{errors.rut.message}</p>}
-                            <input type="text" placeholder="Nombre" {...register("nombre")} />
-                            <input type="text" placeholder="Apellido" {...register("apellido")} />
-                            <input type="text" placeholder="Telefono" {...register("telefono")} />
-                            <input type="text" placeholder="Correo" {...register("correo")} />
-                            <input  
+                            <Input type="text" placeholder="Nombre" {...register("nombre")} />
+                            <Input type="text" placeholder="Apellido" {...register("apellido")} />
+                            <Input type="text" placeholder="Telefono" {...register("telefono")} />
+                            <Input type="text" placeholder="Correo" {...register("correo")} />
+                            <Input  
                                 value={rut.formatted} 
                                 type="text" 
                                 placeholder="Rut" 
@@ -100,9 +88,21 @@ export function CreateContrato() {
                                         updateRut(e.target.value);
                                         setValue("rut", e.target.value);
                                     }
-                                })} 
+                                })}
                             />                            
-                            <button className="btn" type="submit">Create</button>
+                            <Button className="w-fit bg-gray-700 text-white py-6" radius="sm" type="submit" isDisabled={!isValid}>Siguiente</Button>
+                        </>
+                    );
+                } else if (step === 2) {
+                    return (
+                        <>
+                            <input type="hidden" {...register("rut")} value={apoderado?.rut} />
+                            <Input type="text" placeholder="Nombre" {...register("nombre")} />
+                            <Input type="text" placeholder="Descripción" {...register("descripcion")} />
+                            <label className="text-gray-700">Fecha de inicio</label>
+                            <Input type="date" placeholder="Fecha de inicio" {...register("fechaInicio")} 
+                            description="Fecha en que se inicia el contrato" />
+                            <Button className="w-fit bg-gray-700 text-white" type="submit">Crear</Button>
                         </>
                     );
                 }
