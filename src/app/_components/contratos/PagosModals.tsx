@@ -30,11 +30,12 @@ export function PagosModal({ idContrato }: { idContrato: string }) {
   const [hasPago, setHasPago] = useState(false);
 
   const { data, isLoading, isError } = api.contratos.getCurrentPago.useQuery(idContrato);
+  console.log("error", isError);
   useEffect(() => {
-    if (data) {
+    if (data && !isLoading && !isError) {
       setHasPago(true);
     }
-  }, [data]);
+  }, [data, isLoading, isError]);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
