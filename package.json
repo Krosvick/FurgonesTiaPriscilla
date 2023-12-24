@@ -13,9 +13,6 @@
     "lint": "next lint",
     "start": "next start"
   },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  },
   "dependencies": {
     "@clerk/localizations": "^1.26.12",
     "@clerk/nextjs": "^4.27.6",
