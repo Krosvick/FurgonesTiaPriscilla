@@ -96,14 +96,12 @@ model Contratos {
   fechaInicio DateTime
   fechaTermino DateTime?
   pagos        Pagos[]
-  idPago       String?
   detallesContrato ContratoDetallePupilo[]
   Apoderado Apoderados?
   CreatedAt    DateTime  @default(now())
   UpdatedAt    DateTime  @updatedAt
   DeletedAt    DateTime?
 
-  @@index([idPago], name: "idPago")
 }
 
 model ContratoDetallePupilo {
