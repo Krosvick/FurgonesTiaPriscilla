@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { contratoBackendSchema, detalleSchema, pagoSchema, pagoFormSchema, gestionarPagoSchema} from "~/server/zodTypes/contratoTypes";
+import { contratoBackendSchema, detalleSchema, pagoSchema, pagoFormSchema, gestionarPagoSchema, contratoUpdateSchema} from "~/server/zodTypes/contratoTypes";
 
 export const ContratosRouter = createTRPCRouter({
     create: adminProcedure
@@ -38,11 +38,43 @@ export const ContratosRouter = createTRPCRouter({
             where: {
                 idContrato: input,
             },
-            include: {
-                Apoderado: true,
+            select: {
+                idContrato: true,
+                nombre: true,
+                descripcion: true,
+                fechaInicio: true,
+                fechaTermino: true,
+                Apoderado: {
+                    select: {
+                        idApoderado: true,
+                        nombre: true,
+                        apellido: true,
+                        rut: true,
+                    },
+                },
             },
         });
         return contrato;
+    }),
+    update: adminProcedure
+        .input(contratoUpdateSchema)
+        .mutation(async ({ ctx, input }) => {
+        return ctx.db.contratos.update({
+            where: {
+                idContrato: input.idContrato,
+            },
+            data: {
+                nombre: input.nombre,
+                descripcion: input.descripcion,
+                fechaInicio: input.fechaInicio,
+                fechaTermino: input.fechaTermino,
+                Apoderado: {
+                    connect: {
+                        rut: input.Apoderado?.rut,
+                    },
+                },
+            },
+        });
     }),
     createDetalleContrato: adminProcedure
         .input(detalleSchema)
@@ -156,6 +188,9 @@ export const ContratosRouter = createTRPCRouter({
             },
             take: 1,
         });
+        if (pagos.length === 0) {
+            return null;
+        }
         return pagos[0];
     }),
     updatePago: adminProcedure

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
-import { pupiloBackendSchema } from "~/server/zodTypes/pupilosTypes";
+import { pupiloBackendSchema, pupiloUpdateSchema } from "~/server/zodTypes/pupilosTypes";
 
 export const PupilosRouter = createTRPCRouter({
     create: adminProcedure
@@ -20,6 +20,38 @@ export const PupilosRouter = createTRPCRouter({
                 }
             },
         });
+    }),
+    update: adminProcedure
+        .input(pupiloUpdateSchema)
+        .mutation(async ({ ctx, input }) => {
+        const pupilo = await ctx.db.pupilos.findUnique({
+            where: {
+                idPupilo: input.idPupilo
+            },
+        });
+        if (!pupilo) {
+            throw new Error("Pupilo no encontrado");
+        }
+        const pupiloUpdate = await ctx.db.pupilos.update({
+            where: {
+                idPupilo: input.idPupilo,
+            },
+            data: {
+                nombre: input.nombre,
+                apellido: input.apellido,
+                rut: input.rut,
+                colegio: input.colegio,
+            },
+        });
+        const detalle = await ctx.db.contratoDetallePupilo.update({
+            where: {
+                idPupilo: input.idPupilo,
+            },
+            data: {
+                tipo: input.tipo,
+            },
+        });
+        return pupiloUpdate;
     }),
     getAll: adminProcedure.query(({ ctx }) => {
         return ctx.db.pupilos.findMany({
