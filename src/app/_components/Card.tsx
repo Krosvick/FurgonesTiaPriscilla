@@ -11,6 +11,8 @@ export function Card({ title, description, dark, className, children, headElemen
   const cardClasses = dark
     ? 'bg-gray-800 text-white'
     : 'p-6 bg-slate-100 border border-gray-200 rounded-lg shadow';
+    
+  const hasTruthyElement = headElements?.some(element => Boolean(element));
 
   return (
     <div className={`${cardClasses} ${className}`}>
@@ -19,7 +21,7 @@ export function Card({ title, description, dark, className, children, headElemen
             {title && <h3 className="text-2xl font-medium">{title}</h3>}
             {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
         </div>
-        {headElements && <div className="flex justify-between">{headElements}</div>}
+        {hasTruthyElement && <div className="flex justify-between">{headElements}</div>}
       </div>
       {children}
     </div>
