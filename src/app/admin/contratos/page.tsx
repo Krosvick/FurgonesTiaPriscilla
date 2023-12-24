@@ -20,7 +20,7 @@ export default async function ContratosIndex(){
                     >
                     </Card>
                     <div className="mt-5">
-                    {contratos && contratos.map((contrato) => (
+                    {contratos?.map((contrato) => (
                         <div className="p-6 bg-slate-100 border border-gray-200 rounded-lg shadow mb-4 flex flex-col" key={contrato.idContrato}>
                             <div className="w-full mb-4 md:mb-0">
                                 <div className="flex items-center">

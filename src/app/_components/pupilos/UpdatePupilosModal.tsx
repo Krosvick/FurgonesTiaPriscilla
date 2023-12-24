@@ -52,8 +52,9 @@ export function UpdatePupilosModal({pupilo}: UpdatePupilosModalProps) {
     const updatePupilo = api.pupilos.update.useMutation({
         onSuccess: (data) => {
             console.log("success")
-            //@ts-ignore
-            queryClient.invalidateQueries("pupilos.getAll");
+            //@ts-expect-error
+            queryClient.invalidateQueries("pupilos.getAll")
+            .catch((error) => console.log(error));
         },
     });
 

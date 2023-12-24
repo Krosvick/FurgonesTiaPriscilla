@@ -4,7 +4,10 @@ import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure }
 import { WebpayPlus } from "transbank-sdk";
 
 import { apoderadoSchema } from "~/server/zodTypes/apoderadoTypes";
+import { webpayResponseSchema, webpayCreateSchema } from "~/server/zodTypes/contratoTypes";
 
+type webpayResponse = z.infer<typeof webpayResponseSchema>;
+type webpayCreate = z.infer<typeof webpayCreateSchema>;
 
 export const ApoderadosRouter = createTRPCRouter({
   nombre: adminProcedure
@@ -45,19 +48,19 @@ export const ApoderadosRouter = createTRPCRouter({
     monto: z.number()
   }))
   .query(async ({ ctx, input }) => {
-    let buyOrder = "O-" + Math.floor(Math.random() * 10000) + 1;
-    let sessionId = "S-" + Math.floor(Math.random() * 10000) + 1;
-    let amount = input.monto;
-    let returnUrl = input.returnURL;
-    //@ts-ignore
+    const buyOrder = "O-" + Math.floor(Math.random() * 10000) + 1;
+    const sessionId = "S-" + Math.floor(Math.random() * 10000) + 1;
+    const amount = input.monto;
+    const returnUrl = input.returnURL;
+    //@ts-expect-error
     const createResponse = await (new WebpayPlus.Transaction()).create(
       buyOrder, 
       sessionId, 
       amount, 
       returnUrl
-    );
-    let token = createResponse.token;
-    let url = createResponse.url;
+    ) as webpayCreate;
+    const token = createResponse.token;
+    const url = createResponse.url;
     return { token, url, amount };
   }),
 
@@ -68,8 +71,9 @@ export const ApoderadosRouter = createTRPCRouter({
   }))
   .mutation(async ({ ctx, input }) => {
     let token = input.token;
-    //@ts-ignore
-    const commitResponse = await (new WebpayPlus.Transaction()).commit(token);
+    //@ts-expect-error
+    const commitResponse = await (new WebpayPlus.Transaction()).commit(token) as webpayResponse;
+    
     //if commitResponse.response_code == 0 then we set the apoderado.pago[](the last one)
     if (commitResponse.response_code == 0) {
       const apoderado = await ctx.db.apoderados.findFirst({

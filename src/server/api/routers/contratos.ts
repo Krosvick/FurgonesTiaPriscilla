@@ -250,7 +250,7 @@ export const ContratosRouter = createTRPCRouter({
     createNewPagos: publicProcedure
     .mutation(async ({ ctx }) => {
         const date37daysAgo = new Date(new Date().setDate(new Date().getDate() - 37));
-        let pagos = await ctx.db.pagos.findMany({
+        const pagos = await ctx.db.pagos.findMany({
             where: {
                 fechaTermino: {
                     gte: date37daysAgo,

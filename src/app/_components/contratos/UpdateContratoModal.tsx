@@ -38,13 +38,14 @@ export function UpdateContratoModal({contrato}: UpdateContratoModalProps) {
     const updatePupilo = api.contratos.update.useMutation({
         onSuccess: (data) => {
             console.log("success")
-            //@ts-ignore
-            queryClient.invalidateQueries("contratos.getById");
+            //@ts-expect-error
+            queryClient.invalidateQueries("contratos.getById")
+            .catch((error) => console.log(error));
         },
     });
 
     const onSubmit: SubmitHandler<ContratoUpdate> = async (data) => {
-        let dataWithDateString = {
+        const dataWithDateString = {
             ...data,
             fechaTermino: data.fechaTermino instanceof Date ? data.fechaTermino.toISOString() : data.fechaTermino
         };
@@ -65,12 +66,12 @@ export function UpdateContratoModal({contrato}: UpdateContratoModalProps) {
                                 {({ register, reset, setValue, formState:{errors} }) => {
                                     return (
                                         <>
-                                            <input type="hidden" {...register("Apoderado.nombre")} value={contrato.Apoderado?.nombre || ''}/>
-                                            <input type="hidden" {...register("Apoderado.apellido")} value={contrato.Apoderado?.apellido || ''}/>
+                                            <input type="hidden" {...register("Apoderado.nombre")} value={contrato.Apoderado?.nombre ?? ''}/>
+                                            <input type="hidden" {...register("Apoderado.apellido")} value={contrato.Apoderado?.apellido ?? ''}/>
                                             <input type="hidden" {...register("idContrato")} value={contrato.idContrato}/>
-                                            <input type="hidden" {...register("Apoderado.rut")} value={contrato.Apoderado?.rut || ''}/>
-                                            <Input type="text" label="Nombre" {...register("nombre")} defaultValue={contrato.nombre || ''}/>
-                                            <Input type="text" label="Apellido" {...register("descripcion")} defaultValue={contrato.descripcion || ''}/>
+                                            <input type="hidden" {...register("Apoderado.rut")} value={contrato.Apoderado?.rut ?? ''}/>
+                                            <Input type="text" label="Nombre" {...register("nombre")} defaultValue={contrato.nombre ?? ''}/>
+                                            <Input type="text" label="Apellido" {...register("descripcion")} defaultValue={contrato.descripcion ?? ''}/>
                                             <Input type="date" label="fechaInicio" {...register("fechaInicio")} defaultValue={contrato.fechaInicio.toISOString().split('T')[0]}/>
                                             <Input type="date" label="fechaTermino" {...register("fechaTermino")} defaultValue={contrato.fechaTermino ? contrato.fechaTermino.toISOString().split('T')[0] : ''}/>
                                             <Button className="bg-gray-600 py-5 text-white" variant="solid" type="submit">Terminar</Button>

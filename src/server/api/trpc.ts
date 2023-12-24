@@ -112,7 +112,7 @@ const isAuth = middleware(async ({ ctx, next }) => {
 
 const isAdmin = middleware(async ({ ctx, next }) => {
   try{
-    // @ts-ignore
+    // @ts-expect-error
     if(!ctx.isAdmin){
       throw new TRPCError({ code: 'UNAUTHORIZED' })
     }

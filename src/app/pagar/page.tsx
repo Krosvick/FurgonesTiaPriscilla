@@ -44,15 +44,15 @@ export default function PagoCliente(){
   const { isLoading, data:DatosPago, refetch, isFetched } = api.apoderados.detallesPagoMensual.useQuery(rut.formatted, {
     onSuccess: (data) => {
       const datosPago: DatosdePago = ({
-        monto: data?.pagos[0]?.monto || 0,
-        fechaTermino: data?.pagos[0]?.fechaTermino || null,
-        estado: data?.pagos[0]?.estado || "",
+        monto: data?.pagos[0]?.monto ?? 0,
+        fechaTermino: data?.pagos[0]?.fechaTermino ?? null,
+        estado: data?.pagos[0]?.estado ?? "",
         pupilos: data?.detallesContrato.map((detalle) => ({
           nombre: detalle?.pupilo?.nombre,
           apellido: detalle?.pupilo?.apellido,
           colegio: detalle?.pupilo?.colegio,
           tipoTrayecto: detalle?.tipo,
-        })) || [],
+        })) ?? [],
       })
       if(data?.detallesContrato != undefined){
         setDatosPago(datosPago);

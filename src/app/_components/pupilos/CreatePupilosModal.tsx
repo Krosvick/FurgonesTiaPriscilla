@@ -46,16 +46,18 @@ export function CreatePupilosModal({idApoderado, idContrato}: PupilosModalProps)
     const createPupilo = api.pupilos.create.useMutation({
         onSuccess: (data) => {
             console.log("success")
-            //@ts-ignore
-            queryClient.invalidateQueries("pupilos.getAll");
+            //@ts-expect-error
+            queryClient.invalidateQueries("pupilos.getAll")
+            .catch((error) => console.log(error));
         },
     });
 
     const createDetalle = api.contratos.createDetalleContrato.useMutation({
         onSuccess: (data) => {
             console.log("success")
-            //@ts-ignore
-            queryClient.invalidateQueries("contratos.getAll");
+            //@ts-expect-error
+            queryClient.invalidateQueries("contratos.getAll")
+            .catch((error) => console.log(error));
         },
     });
 

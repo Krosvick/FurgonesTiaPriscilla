@@ -28,9 +28,10 @@ export function GestionarPagoForm({ idContrato, onOpenChange }: CrearPagoFormPro
     const queryClient = useQueryClient();
     const updatePago = api.contratos.updatePago.useMutation({
         onSuccess: (data) => {
-        console.log("success");
-        //@ts-ignore
-        queryClient.invalidateQueries("contratos.getAll");
+          console.log("success");
+          //@ts-expect-error
+          queryClient.invalidateQueries("contratos.getAll")
+          .catch((error) => console.log(error));
         },
     });
     const { data: dataPago, isLoading, isError } = api.contratos.getCurrentPago.useQuery(idContrato);

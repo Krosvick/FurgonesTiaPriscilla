@@ -57,9 +57,9 @@ export function CreateContrato() {
                 if(apoderado?.rut){
                     contrato.rut = apoderado?.rut
                 }
-                if (contrato.rut) { // Check if rut is not undefined
-                    await createApoderado.mutateAsync(apoderado as Apoderado);
-                    await createContrato.mutateAsync(contrato as Contrato);
+                if (contrato.rut) {
+                    await createApoderado.mutateAsync(apoderado!);
+                    await createContrato.mutateAsync(contrato);
                 } else {
                     console.error('Rut is undefined');
                 }

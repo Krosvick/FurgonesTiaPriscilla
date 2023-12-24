@@ -8,7 +8,7 @@ import { UpdatePupilosModal } from "~/app/_components/pupilos/UpdatePupilosModal
 
 export default function Page({ params }: { params: { id: string } }) {
     const {data: contrato, isLoading, isFetched} = api.contratos.getById.useQuery(params.id);
-    const { data: pupilos, isLoading: isLoadingPupilos, isFetched: isFetchedPupilos } = api.pupilos.getByApoderadoId.useQuery(contrato?.Apoderado?.idApoderado || '', {
+    const { data: pupilos, isLoading: isLoadingPupilos, isFetched: isFetchedPupilos } = api.pupilos.getByApoderadoId.useQuery(contrato?.Apoderado?.idApoderado ?? '', {
     enabled: !!contrato?.Apoderado,});
 
     if (isLoading) {
@@ -22,9 +22,9 @@ export default function Page({ params }: { params: { id: string } }) {
                     {isFetched && contrato && <ContratoCard contrato={contrato} />}
                 </div>
                 <div className="mt-5 mb-1">
-                    {contrato && contrato.Apoderado && <CreatePupilosModal idApoderado={contrato.Apoderado.idApoderado} idContrato={contrato.idContrato} />}
+                    {contrato?.Apoderado && <CreatePupilosModal idApoderado={contrato.Apoderado.idApoderado} idContrato={contrato.idContrato} />}
                 </div>
-                    {isFetchedPupilos && pupilos && pupilos.map((pupilo) => (
+                    {isFetchedPupilos && pupilos?.map((pupilo) => (
                     <Card dark={false} className="flex justify-between">
                             <div key={pupilo.idPupilo} className="p-4 w-3/4">
                                 <h2 className="text-xl font-bold">Nombre: {pupilo.nombre} {pupilo.apellido}</h2>

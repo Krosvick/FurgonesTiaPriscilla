@@ -69,3 +69,46 @@ export const gestionarPagoSchema = z.object({
     monto: z.number().positive(),
     fechaPago: z.string().transform((str) => new Date(str)).nullable(),
 });
+
+//this is the response example
+/*
+{
+  "vci": "TSY",
+  "amount": 10000,
+  "status": "AUTHORIZED",
+  "buy_order": "ordenCompra12345678",
+  "session_id": "sesion1234557545",
+  "card_detail": {
+      "card_number": "6623"
+  },
+  "accounting_date": "0522",
+  "transaction_date": "2019-05-22T16:41:21.063Z",
+  "authorization_code": "1213",
+  "payment_type_code": "VN",
+  "response_code": 0,
+  "installments_number": 0
+}*/
+export const webpayResponseSchema = z.object({
+    vci: z.string(),
+    amount: z.number().positive(),
+    status: z.enum(["INITIALIZED", "AUTHORIZED", "FAILED", "NULLIFIED", "PARTIALLY_NULLIFIED", "REVERSED", "CAPTURED"]),
+    buy_order: z.string(),
+    session_id: z.string(),
+    card_detail: z.object({
+        card_number: z.string(),
+    }),
+    accounting_date: z.string(),
+    transaction_date: z.string(),
+    authorization_code: z.string(),
+    payment_type_code: z.string(),
+    response_code: z.number(),
+    installments_amount: z.number().positive(),
+    installments_number: z.number().positive(),
+    balance: z.number().positive(),
+    idPago: z.string().uuid().nullable(),
+});
+
+export const webpayCreateSchema = z.object({
+    token: z.string(),
+    url: z.string(),
+});
