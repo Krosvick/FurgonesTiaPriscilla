@@ -257,13 +257,14 @@ export const ContratosRouter = createTRPCRouter({
                 },
             },
         });
+        type Pago = typeof pagos[0];
 
-        const pagosMap = new Map();
+        const pagosMap = new Map<string, Pago>();
         pagos.forEach((pago) => {
             if (!pagosMap.has(pago.idApoderado)) {
                 pagosMap.set(pago.idApoderado, pago);
             } else {
-                const pagoMap = pagosMap.get(pago.idApoderado);
+                const pagoMap = pagosMap.get(pago.idApoderado)!;
                 if (pagoMap.fechaInicio.getTime() < pago.fechaInicio.getTime()) {
                     pagosMap.set(pago.idApoderado, pago);
                 }
@@ -273,7 +274,7 @@ export const ContratosRouter = createTRPCRouter({
         const pagosArray = Array.from(pagosMap.values());
 
         const newPagosPromises = pagosArray.map(async (pago) => {
-            if(pago.estado !== "Pagado" || pago.fechaTermino.getTime() > new Date().getTime()) {
+            if(pago.estado !== "Pagado" || pago.fechaTermino!.getTime() > new Date().getTime()) {
                 return;
             }
             const contrato = await ctx.db.contratos.findUnique({

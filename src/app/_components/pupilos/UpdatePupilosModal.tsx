@@ -90,7 +90,7 @@ export function UpdatePupilosModal({pupilo}: UpdatePupilosModalProps) {
                                                 })} 
                                             />
                                             <Input type="text" label="Colegio" {...register("colegio")} defaultValue={pupilo.colegio}/>
-                                            <Select label="Tipo de trayecto" {...register("tipo")} defaultSelectedKeys={[pupilo.detalle?.tipo]}>
+                                            <Select label="Tipo de trayecto" {...register("tipo")} defaultSelectedKeys={[pupilo.detalle!.tipo.toString()]}>
                                                 <SelectItem key="ida" value="ida">Ida</SelectItem>
                                                 <SelectItem key="vuelta" value="vuelta">Vuelta</SelectItem>
                                                 <SelectItem key="idaYvuelta" value="idaYvuelta">Ida y vuelta</SelectItem>
