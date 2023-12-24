@@ -70,7 +70,7 @@ export const ApoderadosRouter = createTRPCRouter({
     rut: z.string()
   }))
   .mutation(async ({ ctx, input }) => {
-    let token = input.token;
+    const token = input.token;
     //@ts-expect-error
     const commitResponse = await (new WebpayPlus.Transaction()).commit(token) as webpayResponse;
     
@@ -89,8 +89,8 @@ export const ApoderadosRouter = createTRPCRouter({
           }
         }
       });
-      if (apoderado && apoderado.pagos && apoderado.pagos.length > 0) {
-        const firstPago = apoderado.pagos[0];
+      if (apoderado?.pagos?.length! > 0) {
+        const firstPago = apoderado?.pagos[0];
         if (firstPago) {
           commitResponse.idPago = firstPago.idPago;
           await ctx.db.pagos.update({
