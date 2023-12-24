@@ -13,6 +13,18 @@ export const contratoBackendSchema = z.object({
     fechaInicio: z.date(),
     rut: z.string()
 });
+export const contratoUpdateSchema = z.object({
+    idContrato: z.string().uuid(),
+    nombre: z.string().nullable(),
+    descripcion: z.string().nullable(),
+    fechaInicio: z.coerce.date(),
+    fechaTermino: z.string().transform((str) => new Date(str)).nullable(),
+    Apoderado: z.object({
+        rut: z.string(),
+        nombre: z.string(),
+        apellido: z.string(),
+    }).nullable(),
+});
 
 export const contratoShowSchema = z.object({
     nombre:z.string(),

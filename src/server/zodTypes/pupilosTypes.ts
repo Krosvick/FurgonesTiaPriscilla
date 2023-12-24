@@ -15,3 +15,12 @@ export const pupiloBackendSchema = z.object({
     colegio: z.string(),
     idApoderado: z.string().uuid(),
 });
+
+export const pupiloUpdateSchema = z.object({
+    idPupilo: z.string().uuid(),
+    nombre: z.string(),
+    apellido: z.string(),
+    rut: z.string(),
+    colegio: z.string(),
+    tipo: z.enum(["ida", "vuelta", "idaYvuelta"]),
+});
