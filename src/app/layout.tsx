@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
 import { Providers } from "./providers";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -37,6 +38,7 @@ export default function RootLayout({
                 {children}
               </TRPCReactProvider>
             </Providers>
+            <SpeedInsights/>
           </body>
         </html>
     </ClerkProvider>
