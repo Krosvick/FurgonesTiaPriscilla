@@ -332,6 +332,29 @@ export const ContratosRouter = createTRPCRouter({
         const newPagos = await Promise.all(newPagosPromises);
         return newPagos.filter(pago => pago !== undefined);
     }),
+    getAllPagos: adminProcedure
+    .query(async ({ ctx }) => {
+        const pagos = await ctx.db.pagos.findMany({
+            select: {
+                idPago: true,
+                fechaInicio: true,
+                fechaTermino: true,
+                estado: true,
+                monto: true,
+                fechaPago: true,
+                idContrato: true,
+                idApoderado: true,
+                apoderado: {
+                    select: {
+                        nombre: true,
+                        apellido: true,
+                        rut: true,
+                    },
+                },
+            }
+        });
+        return pagos;
+    }),
 
 
 });
