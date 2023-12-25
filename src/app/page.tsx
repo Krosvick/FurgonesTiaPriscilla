@@ -9,7 +9,7 @@ import { SignedIn } from "@clerk/nextjs";
 export default async function Home() {
   return (
     <main className="bg-gradient-to-br from-violet-200 to-pink-200">
-      <header className="max-w-screen p-5 sticky top-0 z-50">
+      <header className="max-w-screen sticky top-0 z-50">
         <Navbar 
           logo="/logo/logo.png"
           title="Furgones Tia Priscilla"
@@ -28,11 +28,11 @@ export default async function Home() {
 
           ]}
           showAuthInfo={true}
-          className="outline outline-2 bg-gray-100"
+          className="bg-gray-100"
         />
       </header>
       <section className="max-w-screen p-5">
-        <Container bgColor="bg-gray-100" className="bg-opacity-50 rounded-md outline outline-2">
+        <Container bgColor="bg-gray-100" className="bg-opacity-50 rounded-md">
           <div className="flex justify-center items-center h-screen">
             <div className="w-3/4">
               <Card className="col-span-12 sm:col-span-4 text-black min-h-screen mr-5">
