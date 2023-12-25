@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { contratoBackendSchema, detalleSchema, pagoSchema, pagoFormSchema, gestionarPagoSchema, contratoUpdateSchema} from "~/server/zodTypes/contratoTypes";
+import { contratoBackendSchema, detalleSchema, updatePagoSchema, pagoFormSchema, gestionarPagoSchema, contratoUpdateSchema} from "~/server/zodTypes/contratoTypes";
 import { calculateFechaInicio, calculateFechaTermino } from "~/server/utils";
 
 export const ContratosRouter = createTRPCRouter({
@@ -355,6 +355,33 @@ export const ContratosRouter = createTRPCRouter({
         });
         return pagos;
     }),
+    updatePagoModal: adminProcedure
+    .input(updatePagoSchema)
+    .mutation(async ({ ctx, input }) => {
+        const pago = await ctx.db.pagos.findUnique({
+            where: {
+                idPago: input.idPago,
+            },
+        });
 
+        if (!pago) {
+            throw new TRPCError({
+                code: 'NOT_FOUND',
+                message: 'Pago not found',
+            });
+        }
+        return ctx.db.pagos.update({
+            where: {
+                idPago: input.idPago,
+            },
+            data: {
+                fechaInicio: input.fechaInicio,
+                fechaTermino: input.fechaTermino,
+                fechaPago: input.fechaPago,
+                estado: input.estado,
+                monto: input.monto,
+            },
+        });
+    }),
 
 });
