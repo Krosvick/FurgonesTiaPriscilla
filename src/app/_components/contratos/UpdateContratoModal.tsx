@@ -60,7 +60,7 @@ export function UpdateContratoModal({contrato}: UpdateContratoModalProps) {
                     <ModalContent>
                     {(onClose) => (
                         <>
-                        <ModalHeader className="flex flex-col gap-1">Actualizar informacion de pupilo</ModalHeader>
+                        <ModalHeader className="flex flex-col gap-1">Actualizar informacion de contrato</ModalHeader>
                         <ModalBody>
                             <Form methods={methods} onSubmit={onSubmit} className="flex flex-col gap-1">
                                 {({ register, reset, setValue, formState:{errors} }) => {
