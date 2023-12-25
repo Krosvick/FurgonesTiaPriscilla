@@ -3,7 +3,7 @@ import { z } from "zod";
 import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import { WebpayPlus } from "transbank-sdk";
 
-import { apoderadoSchema } from "~/server/zodTypes/apoderadoTypes";
+import { apoderadoSchema, updateApoderadoSchema } from "~/server/zodTypes/apoderadoTypes";
 import { webpayResponseSchema, webpayCreateSchema } from "~/server/zodTypes/contratoTypes";
 
 type webpayResponse = z.infer<typeof webpayResponseSchema>;
@@ -32,14 +32,44 @@ export const ApoderadosRouter = createTRPCRouter({
       });
     }),
 
-  getLatest: publicProcedure.query(({ ctx }) => {
+  update: adminProcedure
+    .input(updateApoderadoSchema)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.apoderados.update({
+        where: {
+          idApoderado: input.idApoderado,
+        },
+        data: {
+          nombre: input.nombre,
+          apellido: input.apellido,
+          telefono: input.telefono,
+          correo: input.correo,
+          rut: input.rut,
+          CreatedAt: new Date(),
+        },
+      });
+    }),
+
+  getLatest: adminProcedure.query(({ ctx }) => {
     return ctx.db.apoderados.findFirst({
       orderBy: { CreatedAt: "desc" },
     });
   }),
 
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.db.apoderados.findMany();
+  getAll: adminProcedure.query(({ ctx }) => {
+    const apoderados = ctx.db.apoderados.findMany({
+      select: {
+        idApoderado: true,
+        nombre: true,
+        apellido: true,
+        telefono: true,
+        correo: true,
+        rut: true,
+        idContrato: true,
+        CreatedAt: true,
+      },
+    })
+    return apoderados;
   }),
 
   webpayPago: publicProcedure
