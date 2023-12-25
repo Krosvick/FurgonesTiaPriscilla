@@ -3,7 +3,7 @@ import { Card } from "~/app/_components/Card";
 import Link from "next/link";
 import { api } from "~/trpc/server";
 import { Button } from "@nextui-org/react";
-import { UpdateApoderadoModal } from "~/app/_components/apoderados/UpdateApoderadoModal";
+import { UpdatePagoModal } from "~/app/_components/contratos/updatePagoModal";
 
 export default async function PagosIndex(){
     const pagos = await api.contratos.getAllPagos.query();
@@ -12,7 +12,7 @@ export default async function PagosIndex(){
             <Container bgColor="bg-gray-100" className="rounded-3xl bg-opacity-50">
                 <div className="w-full h-fit">
                     <Card
-                        title="pagos"
+                        title="Pagos"
                         description="Aqui se pueden ver todos los pagos"
                         dark={false}
                     >
@@ -44,10 +44,11 @@ export default async function PagosIndex(){
                                         <p className="font-bold text-lg mb-1">Rut:</p>
                                         <p className="mb-2">{pago.apoderado.rut}</p>
                                     </div>
-                                    <div className="flex justify-center items-center">
+                                    <div className="flex gap-5 justify-center items-center">
                                         <Link href={`/admin/contratos/${pago.idContrato}`}>
                                             <Button color="primary" radius="md" size="lg" variant="shadow" className="font-medium">Ver Contrato</Button>
                                         </Link>
+                                            <UpdatePagoModal pago={pago}/>
                                     </div>
                                 </div>
                             </div>
