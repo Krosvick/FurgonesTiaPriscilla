@@ -35,9 +35,9 @@ export default async function ApoderadosIndex(){
                                     <p className="font-bold text-lg mb-1">Fecha de alta:</p>
                                     <p className="mb-2">{apoderado.CreatedAt.toISOString().split('T')[0]}</p>
                                 </div>
-                                <div className="w-full md:w-1/3 flex items-center justify-end">
+                                <div className="w-full md:w-1/3 flex lg:flex-col gap-5 items-center justify-center">
                                     <UpdateApoderadoModal apoderado={apoderado}/>
-                                    <Link href={`/admin/apoderados/${apoderado.idContrato}`}>
+                                    <Link href={`/admin/contratos/${apoderado.idContrato}`}>
                                         <Button color="primary" radius="md" size="lg" variant="shadow" className="font-medium">Ver Contrato</Button>
                                     </Link>
                                 </div>
