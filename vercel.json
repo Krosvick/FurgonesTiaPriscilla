@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/checkPagos",
+      "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/createPagos",
+      "schedule": "0 12 * * *"
+    }
+  ]
+}
