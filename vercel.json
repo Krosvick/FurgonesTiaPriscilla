@@ -2,11 +2,11 @@
   "crons": [
     {
       "path": "/api/checkPagos",
-      "schedule": "0 12 * * *"
+      "schedule": "0 16 * * *"
     },
     {
       "path": "/api/createPagos",
-      "schedule": "0 12 * * *"
+      "schedule": "0 16 * * *"
     }
   ]
 }
