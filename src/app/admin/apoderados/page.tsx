@@ -3,6 +3,7 @@ import { Card } from "~/app/_components/Card";
 import Link from "next/link";
 import { api } from "~/trpc/server";
 import { Button } from "@nextui-org/react";
+import { UpdateApoderadoModal } from "~/app/_components/apoderados/UpdateApoderadoModal";
 
 export default async function ApoderadosIndex(){
     const apoderados = await api.apoderados.getAll.query();
@@ -14,9 +15,6 @@ export default async function ApoderadosIndex(){
                         title="Apoderados"
                         description="Aqui se pueden ver todos los apoderados"
                         dark={false}
-                        headElements={[
-                        <Link href="/admin/contratos/crear"><button className="btn btn-neutral">Crear apoderado</button></Link>
-                    ]}
                     >
                     </Card>
                     <div className="mt-5">
@@ -35,10 +33,10 @@ export default async function ApoderadosIndex(){
                                     <p className="font-bold text-lg mb-1">Correo:</p>
                                     <p className="mb-2">{apoderado.correo}</p>
                                     <p className="font-bold text-lg mb-1">Fecha de alta:</p>
-                                    <p className="mb-2">{apoderado.CreatedAt.toISOString()}</p>
+                                    <p className="mb-2">{apoderado.CreatedAt.toISOString().split('T')[0]}</p>
                                 </div>
                                 <div className="w-full md:w-1/3 flex items-center justify-end">
-                                    <Button>Actualizar apoderado</Button>
+                                    <UpdateApoderadoModal apoderado={apoderado}/>
                                 </div>
                             </div>
                         </div>
