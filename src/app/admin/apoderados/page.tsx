@@ -37,6 +37,9 @@ export default async function ApoderadosIndex(){
                                 </div>
                                 <div className="w-full md:w-1/3 flex items-center justify-end">
                                     <UpdateApoderadoModal apoderado={apoderado}/>
+                                    <Link href={`/admin/apoderados/${apoderado.idContrato}`}>
+                                        <Button color="primary" radius="md" size="lg" variant="shadow" className="font-medium">Ver Contrato</Button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
