@@ -112,3 +112,19 @@ export const webpayCreateSchema = z.object({
     token: z.string(),
     url: z.string(),
 });
+
+export const updatePagoSchema = z.object({
+    idPago: z.string().uuid(),
+    fechaInicio: z.coerce.date(),
+    fechaTermino: z.coerce.date().nullable(),
+    fechaPago: z.coerce.date().nullable(),
+    estado: z.enum(["Pagado", "Pendiente", "Atrasado", "Inactivo"]),
+    monto: z.number().positive(),
+    idContrato: z.string().uuid(),
+    idApoderado: z.string().uuid(),
+    apoderado: z.object({
+        rut: z.string(),
+        nombre: z.string(),
+        apellido: z.string(),
+    })
+});
