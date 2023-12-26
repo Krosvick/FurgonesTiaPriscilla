@@ -44,7 +44,7 @@ export default async function Home() {
                 <span className="text-xs font-medium text-gray-800 uppercase dark:text-gray-200">Nuestras redes:</span>
                 <Link 
                   href="https://web.facebook.com/profile.php?id=100054458799644" 
-                  className="flex items-center mt-3 text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-400 transition duration-300 ease-in-out transform hover:scale-110 origin-center"
+                  className="flex items-center mt-3 text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-400 transition duration-300 ease-in-out transform hover:scale-110 origin-center w-fit"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 48 48">
                     <path fill="#039be5" d="M24 5A19 19 0 1 0 24 43A19 19 0 1 0 24 5Z"></path>
