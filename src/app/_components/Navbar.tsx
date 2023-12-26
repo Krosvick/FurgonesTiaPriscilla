@@ -17,7 +17,7 @@ export function Navbar({ logo, title, elements = [], showAuthInfo, className }: 
       //add classname props to nav
       <nav className={`navbar mx-auto py-5 shadow-lg bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-80 ${className}`}>
         <div className="flex-1">
-          {logo && <Image src={logo} alt="Logo" width={100} height={100} />}
+          {logo && <Link href="/"><Image src={logo} alt="Logo" width={100} height={100} /> </Link>}
           <Link href="/" className="btn btn-ghost text-xl">{title}</Link>
         </div>
         <div className="dropdown dropdown-end">

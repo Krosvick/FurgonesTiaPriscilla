@@ -82,8 +82,8 @@ export default function PagoCliente(){
     
     return (
       <section className="min-w-screen flex min-h-screen justify-center p-5">
-        <Card className="h-fit w-fit">
-          <CardBody>
+        <Card className="h-fit w-1/3 mt-20">
+          <CardBody className="flex gap-5">
             <h1>Ingrese su Rut de cliente</h1>
             <Form methods={methods} onSubmit={onSubmit}>
               {({ setValue, register }) => (
@@ -91,6 +91,7 @@ export default function PagoCliente(){
                   <Input
                     value={rut.formatted}
                     type="text"
+                    color="primary"
                     placeholder="Rut"
                     {...register("rut", {
                       onChange: (e) => {
@@ -103,7 +104,7 @@ export default function PagoCliente(){
                     color="primary"
                     radius="sm"
                     size="lg"
-                    className="font-medium"
+                    className="font-medium mt-5"
                     onClick={onOpen}
                     type="submit"
                     isDisabled={!isValid}
@@ -128,7 +129,7 @@ export default function PagoCliente(){
                       {hayDatos && !isLoading && datosdePago && !isLoadingWebpay && datosdePago.estado != "Pagado" && datosdePago.estado != "Inactivo" ? (
                         <form action={webpayData?.url} method="post">
                           <input type="hidden" name="token_ws" value={webpayData?.token}/>
-                          <Button isDisabled={isLoadingWebpay} type="submit" color="primary" radius="sm" size="lg" className="font-medium">
+                          <Button isDisabled={isLoadingWebpay} type="submit" color="secondary" radius="sm" size="lg" variant="ghost" className="font-medium">
                             Monto a pagar: ${webpayData?.amount}
                           </Button>
                         </form>
