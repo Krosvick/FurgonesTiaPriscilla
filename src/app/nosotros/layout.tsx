@@ -13,7 +13,7 @@ export default function PagoLayout(props: AdminLayoutProps) {
             <header className="max-w-screen sticky top-0 z-50">
                 <Navbar 
                 logo="/logo/logo.png"
-                title="Furgones Tia Priscilla"
+                title="Furgones Tía Priscilla"
                 elements={[
                     <Link href="/pagar">
                     <Button radius="sm" variant="shadow" color="secondary" className="mx-5 scale-150 font-semibold">Pagar</Button>
