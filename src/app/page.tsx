@@ -10,7 +10,7 @@ import Image from "next/image";
 
 export default async function Home() {
   return (
-    <main className="bg-gradient-to-br from-violet-200 to-pink-200">
+    <main className="bg-gradient-to-br from-violet-200 to-pink-200 min-h-screen flex flex-col justify-between">
       <header className="max-w-screen sticky top-0 z-50">
         <Navbar 
           logo="/logo/logo.png"
@@ -33,7 +33,7 @@ export default async function Home() {
           className="bg-gray-100"
         />
       </header>
-      <section className="glass p-5 min-h-fit m-5">
+      <section className="glass p-5 min-h-fit my-5 mx-20">
         <div className="max-w-[85rem] h-full mx-auto p-4 sm:px-6 lg:p-8">
           <div className="grid lg:grid-cols-7 lg:gap-x-8 xl:gap-x-12 lg:items-center">
             <div className="lg:col-span-3">
