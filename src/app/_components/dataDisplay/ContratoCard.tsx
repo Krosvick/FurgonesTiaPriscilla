@@ -24,6 +24,8 @@ export function ContratoCard({ contrato }: { contrato: Contrato }) {
                     <div>
                         <h2 className="text-gray-500 text-sm uppercase tracking-wide">Cliente</h2>
                         <p className="text-gray-800 text-lg">{contrato.Apoderado?.nombre} {contrato.Apoderado?.apellido}</p>
+                        <h2 className="text-gray-500 text-sm uppercase tracking-wide">Rut cliente</h2>
+                        <p className="text-gray-800 text-lg">{contrato.Apoderado?.rut}</p>
                     </div>
                 </div>
                 <div className="grid grid-rows-2 gap-4 md:col-span-1">
