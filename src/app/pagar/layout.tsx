@@ -19,7 +19,7 @@ export default function PagoLayout(props: AdminLayoutProps) {
                     <Button radius="sm" variant="shadow" color="secondary" className="mx-5 scale-150 font-semibold">Pagar</Button>
                     </Link>,
                     <Link href="/nosotros">
-                    <Button color="primary" radius="sm" variant="solid" className="font-semibold">Conocenos!</Button>
+                    <Button color="primary" radius="sm" variant="solid" className="font-semibold">Conócenos!</Button>
                     </Link>,
                     <SignedIn>
                     <Link href="/admin">
