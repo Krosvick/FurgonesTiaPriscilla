@@ -51,6 +51,11 @@ export const ContratosRouter = createTRPCRouter({
                         nombre: true,
                         apellido: true,
                         rut: true,
+                        _count: {
+                            select: {
+                                pupilos: true,
+                            },
+                        },
                     },
                 },
             },
@@ -382,6 +387,32 @@ export const ContratosRouter = createTRPCRouter({
                 monto: input.monto,
             },
         });
+    }),
+    getPagosAtrasados: adminProcedure
+    .query(async ({ ctx }) => {
+        const pagos = await ctx.db.pagos.findMany({
+            where: {
+                estado: "Atrasado",
+            },
+            select: {
+                idPago: true,
+                fechaInicio: true,
+                fechaTermino: true,
+                estado: true,
+                monto: true,
+                fechaPago: true,
+                idContrato: true,
+                idApoderado: true,
+                apoderado: {
+                    select: {
+                        nombre: true,
+                        apellido: true,
+                        rut: true,
+                    },
+                },
+            }
+        });
+        return pagos;
     }),
 
 });

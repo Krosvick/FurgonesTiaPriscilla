@@ -75,6 +75,7 @@ export function CreateContrato() {
                 if (step === 1) {
                     return (
                         <>
+                            <h1 className="underline font-bold underline-offset-4">Creación de apoderado</h1>
                             <Input type="text" placeholder="Nombre" {...register("nombre")} />
                             <Input type="text" placeholder="Apellido" {...register("apellido")} />
                             <Input type="text" placeholder="Telefono" {...register("telefono")} />
@@ -96,13 +97,14 @@ export function CreateContrato() {
                 } else if (step === 2) {
                     return (
                         <>
+                            <h1 className="underline font-bold underline-offset-4">Creación de contrato</h1>
                             <input type="hidden" {...register("rut")} value={apoderado?.rut} />
-                            <Input type="text" placeholder="Nombre" {...register("nombre")} />
+                            <Input type="text" placeholder="Titulo" {...register("nombre")} />
                             <Input type="text" placeholder="Descripción" {...register("descripcion")} />
                             <label className="text-gray-700">Fecha de inicio</label>
                             <Input type="date" placeholder="Fecha de inicio" {...register("fechaInicio")} 
                             description="Fecha en que se inicia el contrato" />
-                            <Button className="w-fit bg-gray-700 text-white" type="submit">Crear</Button>
+                            <Button className="w-fit bg-gray-700 text-white" type="submit" isLoading={createContrato.isLoading}>Crear</Button>
                         </>
                     );
                 }

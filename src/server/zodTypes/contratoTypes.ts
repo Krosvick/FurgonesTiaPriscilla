@@ -23,7 +23,11 @@ export const contratoUpdateSchema = z.object({
         rut: z.string(),
         nombre: z.string(),
         apellido: z.string(),
+        _count: z.object({
+            pupilos: z.number().positive().nullable(),
+        })
     }).nullable(),
+  
 });
 
 export const contratoShowSchema = z.object({

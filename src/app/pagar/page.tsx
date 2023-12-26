@@ -41,7 +41,7 @@ export default function PagoCliente(){
   const [hayDatos, setHayDatos] = useState<boolean>(false);
   const methods = useForm<{ rut: string; }>();
   const { rut, isValid, updateRut } = useRut();
-  const { isLoading, data:DatosPago, refetch, isFetched } = api.apoderados.detallesPagoMensual.useQuery(rut.formatted, {
+  const { isLoading, data:DatosPago, refetch, isFetched, isError } = api.apoderados.detallesPagoMensual.useQuery(rut.formatted, {
     onSuccess: (data) => {
       const datosPago: DatosdePago = ({
         monto: data?.pagos[0]?.monto ?? 0,
@@ -74,7 +74,7 @@ export default function PagoCliente(){
         monto: datosdePago?.monto ?? 0,
     }, 
     {
-        enabled: (isFetched && hayDatos && datosdePago?.estado != "Pagado" && datosdePago?.estado != "Inactivo")
+        enabled: (isFetched && hayDatos && datosdePago?.estado != "Pagado" && datosdePago?.estado != "Inactivo" && datosdePago?.pupilos?.length != 0)
     }
     );
     console.log(webpayData);
@@ -133,7 +133,7 @@ export default function PagoCliente(){
                             Monto a pagar: ${webpayData?.amount}
                           </Button>
                         </form>
-                      ) : !hayDatos && !isLoading ? (
+                      ) : !hayDatos && !isLoading || isError || datosdePago?.pupilos?.length == 0 ? (
                         <p>No hay datos asociados a este Rut</p>
                       ) : datosdePago?.estado == "Pagado" ? (
                         <p>La cuota de este mes ya esta pagada</p>
