@@ -20,7 +20,7 @@ export default function page() {
                                     Furgones Tía Priscilla asegurando un viaje seguro y agradable.
                                 </h2>
                                 <p className="text-gray-500">
-                                    Desde 2011 en la comunidad escolar de Alto hospicio, hemos brindado el aporte de un viaje seguro, agradable y de calidad a todos nuestros clientes, apoderados y alumnos de la localidad.
+                                    Desde 2011 en la comunidad escolar de Alto Hospicio, hemos brindado el aporte de un viaje seguro, agradable y de calidad a todos nuestros clientes, apoderados y alumnos de la localidad.
                                 </p>
                             </div>
 
@@ -75,7 +75,7 @@ export default function page() {
 
                     <p className="mt-2 text-gray-800 text-justify flex-grow">
                         Entregar un servicio productivo y de calidad a la problemática de movilización escolar 
-                        en horarios punta dentro de la cuidad de alto hospicio, demostrando compromiso y dedicación 
+                        en horarios punta dentro de la ciudad de Alto Hospicio, demostrando compromiso y dedicación 
                         a los involucrados dentro del servicio, tanto como estudiantes, apoderados y establecimientos educacionales.
                     </p>
                 </div>
@@ -90,7 +90,7 @@ export default function page() {
 
                     <p className="mt-2 text-gray-800 text-justify flex-grow">
                         Ser una empresa que facilita el transporte de estudiantes dentro de las instituciones de 
-                        alto hospicio. Enfocándose en la productividad dentro de la satisfacción en servicios de 
+                        Alto Hospicio. Enfocándose en la productividad dentro de la satisfacción en servicios de 
                         transporte para los estudiantes, apoderados y establecimientos.
                     </p>
                 </div>
