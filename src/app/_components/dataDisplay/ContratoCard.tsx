@@ -33,7 +33,7 @@ export function ContratoCard({ contrato }: { contrato: Contrato }) {
                     </div>
                 </div>
                 <div className="flex flex-col gap-4 md:col-span-1">
-                    {contrato.Apoderado?._count?.pupilos! > 0 ? (
+                    {contrato.Apoderado?._count?.pupilos ?? 0 > 0 ? (
                         <PagosModal idContrato={contrato.idContrato} />
                     ) : (
                         <div className="flex flex-col justify-center items-center">
