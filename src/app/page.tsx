@@ -33,7 +33,7 @@ export default async function Home() {
           className="bg-gray-100"
         />
       </header>
-      <section className="glass p-5 min-h-fit my-5 mx-20">
+      <section className="glass p-5 min-h-fit my-5 lg:mx-20 mx-5">
         <div className="max-w-[85rem] h-full mx-auto p-4 sm:px-6 lg:p-8">
           <div className="grid lg:grid-cols-7 lg:gap-x-8 xl:gap-x-12 lg:items-center">
             <div className="lg:col-span-3">
