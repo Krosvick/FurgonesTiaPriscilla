@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@clerk/localizations": "^1.26.12",
-    "@clerk/nextjs": "^4.27.6",
+    "@clerk/nextjs": "^4.29.3",
     "@hookform/resolvers": "^3.3.2",
     "@nextui-org/react": "^2.2.9",
     "@prisma/client": "^5.6.0",
