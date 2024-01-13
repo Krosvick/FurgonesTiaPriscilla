@@ -82,7 +82,7 @@ export default function PagoCliente(){
     
     return (
       <section className="min-w-screen flex min-h-screen justify-center p-5">
-        <Card className="h-fit w-1/3 mt-20">
+        <Card className="h-fit w-5/6 lg:w-1/3 mt-20">
           <CardBody className="flex gap-5">
             <h1>Ingrese su Rut de cliente</h1>
             <Form methods={methods} onSubmit={onSubmit}>
